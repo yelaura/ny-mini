@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[43]:
+# In[14]:
 
 import gspread
 import numpy as np
@@ -25,7 +25,8 @@ def write_gdoc(data, ws_name, sht_name, row, col):
     wksht = open_worksheet(ws_name, sht_name)
     
     for i in range(len(data)):
-        wksht.update_cell(row, col+i, data[i])
+        for j in range(len(data)):
+            wksht.update_cell(row+i, col+j, data[i][j])
             
 def read_gdoc_range(ws_name,sht_name="Sheet1",startrow=1,startcol=1, endrow=1, endcol=1):
     wksht = open_worksheet(ws_name, sht_name)
@@ -40,13 +41,28 @@ def read_gdoc_range(ws_name,sht_name="Sheet1",startrow=1,startcol=1, endrow=1, e
     
     return values
 
+def newest_time(ws_name, sheet):
+    wksht = open_worksheet(ws_name, sheet)
+    return wksht.updated
 
-# In[40]:
+def write_gdoc_cell(data, ws_name, sht_name, row, col):
+    wksht = open_worksheet(ws_name, sht_name)
+    
+    wksht.update_cell(row,col,data)
+
+
+# In[12]:
 
 def main():
     ws_name = "Laura"
     sht_name = ["Goals", "Test"]
 
     data = read_gdoc_range(ws_name,sht_name[0], 1,1,7,3)
-    write_gdoc(data,ws_name, sht_name[1], 1,1)
+    #write_gdoc(data,ws_name, sht_name[1], 1,1)
+    print(new("NY Mini 2017 - 1st Round", "Court M3") < new("NY Mini 2017 - 1st Round", "Court M1"))
+
+
+# In[ ]:
+
+
 
