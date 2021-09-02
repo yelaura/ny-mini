@@ -116,6 +116,35 @@ $(document).ready(function() {
 
 });
 
+  // populate dropdown selection based on radio button
+$("#mens") // select the radio by its id
+  .change(function(){ // bind a function to the change event
+        if( $(this).is(":checked") ){ // check if the radio is checked
+            $select = $('#select-pool');
+          $select.empty();
+            for (var i = 1; i <= 10; i++){ 
+              $select.append('<option value="M' + i + '">Court M' + i + '</option>"');
+            }
+          };
+    });
+
+$("#womens") // select the radio by its id
+  .change(function(){ // bind a function to the change event
+        if( $(this).is(":checked") ){ // check if the radio is checked
+            $select = $('#select-pool');
+          $select.empty();
+            for (var i = 1; i <= 10; i++){ 
+              $select.append('<option value="W' + i + '">Court W' + i + '</option>"');
+            }
+          };
+    });
+
+$("#select-pool").change(function() {
+  $("#schedule-table tbody").empty();
+  // TODO: grab schedule from dynamodb
+  // TODO: display schedule with scores if available
+})
+
 $(document).on('click', '.navbar-toggler', function() {
   $toggle = $(this);
 
