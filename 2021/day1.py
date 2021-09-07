@@ -1,7 +1,3 @@
-### change based on which ones we're processing ###
-# PROCESSING = 'MENS'
-PROCESSING = 'WOMENS'
-
 ########################## setup ###############################
 
 from __future__ import print_function
@@ -14,6 +10,10 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
 import pandas as pd
+
+### change based on which ones we're processing ###
+PROCESSING = 'MENS'
+PROCESSING = 'WOMENS'
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -127,25 +127,25 @@ def main():
 
         # print data to google sheet
 
-        batch_update_values_request_body = {
-            # How the input data should be interpreted.
-            'value_input_option': 'USER_ENTERED',
+    batch_update_values_request_body = {
+        # How the input data should be interpreted.
+        'value_input_option': 'USER_ENTERED',
 
-            # The new values to apply to the spreadsheet.
-            'data': [
-                {
-                    'range': OUT_RANGE,
-                    'majorDimension': 'ROWS',
-                    'values': (data.loc[:, 'Wins':'Overall Pts']).values.tolist()
-                }
-            ]
-        }
+        # The new values to apply to the spreadsheet.
+        'data': [
+            {
+                'range': OUT_RANGE,
+                'majorDimension': 'ROWS',
+                'values': (data.loc[:, 'Wins':'Overall Pts']).values.tolist()
+            }
+        ]
+    }
 
-        request = sheet.values().batchUpdate(spreadsheetId=OUT_SHEET,
-                                             body=batch_update_values_request_body)
-        response = request.execute()
+    request = sheet.values().batchUpdate(spreadsheetId=OUT_SHEET,
+                                         body=batch_update_values_request_body)
+    response = request.execute()
 
-        pprint(response)
+    pprint(response)
 
 if __name__ == '__main__':
     main()
