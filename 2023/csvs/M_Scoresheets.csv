@@ -1,111 +1,111 @@
 Court,Game,Team 1,Team 2,Work Team
-03,1,ACT03,BCT03,CCT03
-03,2,CCT03,DCT03,BCT03
-03,3,ACT03,ECT03,DCT03
-03,4,BCT03,CCT03,ACT03
-03,5,DCT03,ECT03,CCT03
-03,6,ACT03,CCT03,ECT03
-03,7,BCT03,DCT03,ACT03
-03,8,CCT03,ECT03,BCT03
-03,9,ACT03,DCT03,ECT03
-03,10,BCT03,ECT03,DCT03
-04,1,ACT04,BCT04,CCT04
-04,2,CCT04,DCT04,BCT04
-04,3,ACT04,ECT04,DCT04
-04,4,BCT04,CCT04,ACT04
-04,5,DCT04,ECT04,CCT04
-04,6,ACT04,CCT04,ECT04
-04,7,BCT04,DCT04,ACT04
-04,8,CCT04,ECT04,BCT04
-04,9,ACT04,DCT04,ECT04
-04,10,BCT04,ECT04,DCT04
-05,1,ACT05,BCT05,CCT05
-05,2,CCT05,DCT05,BCT05
-05,3,ACT05,ECT05,DCT05
-05,4,BCT05,CCT05,ACT05
-05,5,DCT05,ECT05,CCT05
-05,6,ACT05,CCT05,ECT05
-05,7,BCT05,DCT05,ACT05
-05,8,CCT05,ECT05,BCT05
-05,9,ACT05,DCT05,ECT05
-05,10,BCT05,ECT05,DCT05
-06,1,ACT06,BCT06,CCT06
-06,2,CCT06,DCT06,BCT06
-06,3,ACT06,ECT06,DCT06
-06,4,BCT06,CCT06,ACT06
-06,5,DCT06,ECT06,CCT06
-06,6,ACT06,CCT06,ECT06
-06,7,BCT06,DCT06,ACT06
-06,8,CCT06,ECT06,BCT06
-06,9,ACT06,DCT06,ECT06
-06,10,BCT06,ECT06,DCT06
-07,1,ACT07,BCT07,CCT07
-07,2,CCT07,DCT07,BCT07
-07,3,ACT07,ECT07,DCT07
-07,4,BCT07,CCT07,ACT07
-07,5,DCT07,ECT07,CCT07
-07,6,ACT07,CCT07,ECT07
-07,7,BCT07,DCT07,ACT07
-07,8,CCT07,ECT07,BCT07
-07,9,ACT07,DCT07,ECT07
-07,10,BCT07,ECT07,DCT07
-08,1,ACT08,BCT08,CCT08
-08,2,CCT08,DCT08,BCT08
-08,3,ACT08,ECT08,DCT08
-08,4,BCT08,CCT08,ACT08
-08,5,DCT08,ECT08,CCT08
-08,6,ACT08,CCT08,ECT08
-08,7,BCT08,DCT08,ACT08
-08,8,CCT08,ECT08,BCT08
-08,9,ACT08,DCT08,ECT08
-08,10,BCT08,ECT08,DCT08
-14,1,ACT14,BCT14,CCT14
-14,2,CCT14,DCT14,BCT14
-14,3,ACT14,ECT14,DCT14
-14,4,BCT14,CCT14,ACT14
-14,5,DCT14,ECT14,CCT14
-14,6,ACT14,CCT14,ECT14
-14,7,BCT14,DCT14,ACT14
-14,8,CCT14,ECT14,BCT14
-14,9,ACT14,DCT14,ECT14
-14,10,BCT14,ECT14,DCT14
-17,1,ACT17,BCT17,CCT17
-17,2,CCT17,DCT17,BCT17
-17,3,ACT17,ECT17,DCT17
-17,4,BCT17,CCT17,ACT17
-17,5,DCT17,ECT17,CCT17
-17,6,ACT17,CCT17,ECT17
-17,7,BCT17,DCT17,ACT17
-17,8,CCT17,ECT17,BCT17
-17,9,ACT17,DCT17,ECT17
-17,10,BCT17,ECT17,DCT17
-18,1,ACT18,BCT18,CCT18
-18,2,CCT18,DCT18,BCT18
-18,3,ACT18,ECT18,DCT18
-18,4,BCT18,CCT18,ACT18
-18,5,DCT18,ECT18,CCT18
-18,6,ACT18,CCT18,ECT18
-18,7,BCT18,DCT18,ACT18
-18,8,CCT18,ECT18,BCT18
-18,9,ACT18,DCT18,ECT18
-18,10,BCT18,ECT18,DCT18
-19,1,ACT19,BCT19,CCT19
-19,2,CCT19,DCT19,BCT19
-19,3,ACT19,ECT19,DCT19
-19,4,BCT19,CCT19,ACT19
-19,5,DCT19,ECT19,CCT19
-19,6,ACT19,CCT19,ECT19
-19,7,BCT19,DCT19,ACT19
-19,8,CCT19,ECT19,BCT19
-19,9,ACT19,DCT19,ECT19
-19,10,BCT19,ECT19,DCT19
-20,1,ACT20,BCT20,CCT20
-20,2,CCT20,DCT20,BCT20
-20,3,ACT20,ECT20,DCT20
-20,4,BCT20,CCT20,ACT20
-20,5,DCT20,ECT20,CCT20
-20,6,ACT20,CCT20,ECT20
-20,7,BCT20,DCT20,ACT20
-20,8,CCT20,ECT20,BCT20
-20,9,ACT20,DCT20,ECT20
-20,10,BCT20,ECT20,DCT20
+03,1,DC CYC A,BOS Hurricanes Blue,NY Horizon Omega
+03,2,NY Horizon Omega,TOR Shen Long,BOS Hurricanes Blue
+03,3,DC CYC A,PHL Cia Red,TOR Shen Long
+03,4,BOS Hurricanes Blue,NY Horizon Omega,DC CYC A
+03,5,TOR Shen Long,PHL Cia Red,NY Horizon Omega
+03,6,DC CYC A,NY Horizon Omega,PHL Cia Red
+03,7,BOS Hurricanes Blue,TOR Shen Long,DC CYC A
+03,8,NY Horizon Omega,PHL Cia Red,BOS Hurricanes Blue
+03,9,DC CYC A,TOR Shen Long,PHL Cia Red
+03,10,BOS Hurricanes Blue,PHL Cia Red,TOR Shen Long
+04,1,BOS Hurricanes Black,NY Horizon Alpha,TOR United Brave
+04,2,TOR United Brave,TOR Ngum Lam Red,NY Horizon Alpha
+04,3,BOS Hurricanes Black,SF Strangers,TOR Ngum Lam Red
+04,4,NY Horizon Alpha,TOR United Brave,BOS Hurricanes Black
+04,5,TOR Ngum Lam Red,SF Strangers,TOR United Brave
+04,6,BOS Hurricanes Black,TOR United Brave,SF Strangers
+04,7,NY Horizon Alpha,TOR Ngum Lam Red,BOS Hurricanes Black
+04,8,TOR United Brave,SF Strangers,NY Horizon Alpha
+04,9,BOS Hurricanes Black,TOR Ngum Lam Red,SF Strangers
+04,10,NY Horizon Alpha,SF Strangers,TOR Ngum Lam Red
+05,1,DC CYC Boomin',PHL Suns A,NY Strangers Z
+05,2,NY Strangers Z,BOS Rising Tide,PHL Suns A
+05,3,DC CYC Boomin',TOR Connex B,BOS Rising Tide
+05,4,PHL Suns A,NY Strangers Z,DC CYC Boomin'
+05,5,BOS Rising Tide,TOR Connex B,NY Strangers Z
+05,6,DC CYC Boomin',NY Strangers Z,TOR Connex B
+05,7,PHL Suns A,BOS Rising Tide,DC CYC Boomin'
+05,8,NY Strangers Z,TOR Connex B,PHL Suns A
+05,9,DC CYC Boomin',BOS Rising Tide,TOR Connex B
+05,10,PHL Suns A,TOR Connex B,BOS Rising Tide
+06,1,NY Strangers Tigerbalm,Montreal Sunbirds B,CHI United 312
+06,2,CHI United 312,BOS Freemason Black,Montreal Sunbirds B
+06,3,NY Strangers Tigerbalm,NY Viking Blue,BOS Freemason Black
+06,4,Montreal Sunbirds B,CHI United 312,NY Strangers Tigerbalm
+06,5,BOS Freemason Black,NY Viking Blue,CHI United 312
+06,6,NY Strangers Tigerbalm,CHI United 312,NY Viking Blue
+06,7,Montreal Sunbirds B,BOS Freemason Black,NY Strangers Tigerbalm
+06,8,CHI United 312,NY Viking Blue,Montreal Sunbirds B
+06,9,NY Strangers Tigerbalm,BOS Freemason Black,NY Viking Blue
+06,10,Montreal Sunbirds B,NY Viking Blue,BOS Freemason Black
+07,1,BOS Knights A,Montreal Sunbirds A,DC CYC Red
+07,2,DC CYC Red,NY Strangers B,Montreal Sunbirds A
+07,3,BOS Knights A,PHL Suns B,NY Strangers B
+07,4,Montreal Sunbirds A,DC CYC Red,BOS Knights A
+07,5,NY Strangers B,PHL Suns B,DC CYC Red
+07,6,BOS Knights A,DC CYC Red,PHL Suns B
+07,7,Montreal Sunbirds A,NY Strangers B,BOS Knights A
+07,8,DC CYC Red,PHL Suns B,Montreal Sunbirds A
+07,9,BOS Knights A,NY Strangers B,PHL Suns B
+07,10,Montreal Sunbirds A,PHL Suns B,NY Strangers B
+08,1,NY Freemasons B,DC MVP A,TOR Connex C
+08,2,TOR Connex C,TOR Legacy Bounce,DC MVP A
+08,3,NY Freemasons B,SF Tien Lung Dragons,TOR Legacy Bounce
+08,4,DC MVP A,TOR Connex C,NY Freemasons B
+08,5,TOR Legacy Bounce,SF Tien Lung Dragons,TOR Connex C
+08,6,NY Freemasons B,TOR Connex C,SF Tien Lung Dragons
+08,7,DC MVP A,TOR Legacy Bounce,NY Freemasons B
+08,8,TOR Connex C,SF Tien Lung Dragons,DC MVP A
+08,9,NY Freemasons B,TOR Legacy Bounce,SF Tien Lung Dragons
+08,10,DC MVP A,SF Tien Lung Dragons,TOR Legacy Bounce
+14,1,PHL CIA A,TOR Ngum Lam Blue,BOS Knights B
+14,2,BOS Knights B,NY Freemasons A,TOR Ngum Lam Blue
+14,3,PHL CIA A,DC YFT Thunder A,NY Freemasons A
+14,4,TOR Ngum Lam Blue,BOS Knights B,PHL CIA A
+14,5,NY Freemasons A,DC YFT Thunder A,BOS Knights B
+14,6,PHL CIA A,BOS Knights B,DC YFT Thunder A
+14,7,TOR Ngum Lam Blue,NY Freemasons A,PHL CIA A
+14,8,BOS Knights B,DC YFT Thunder A,TOR Ngum Lam Blue
+14,9,PHL CIA A,NY Freemasons A,DC YFT Thunder A
+14,10,TOR Ngum Lam Blue,DC YFT Thunder A,NY Freemasons A
+17,1,DC YFT Thunder B,NY Viking Red,BOS Knights C
+17,2,BOS Knights C,TOR United Bold,NY Viking Red
+17,3,DC YFT Thunder B,TOR Connex A,TOR United Bold
+17,4,NY Viking Red,BOS Knights C,DC YFT Thunder B
+17,5,TOR United Bold,TOR Connex A,BOS Knights C
+17,6,DC YFT Thunder B,BOS Knights C,TOR Connex A
+17,7,NY Viking Red,TOR United Bold,DC YFT Thunder B
+17,8,BOS Knights C,TOR Connex A,NY Viking Red
+17,9,DC YFT Thunder B,TOR United Bold,TOR Connex A
+17,10,NY Viking Red,TOR Connex A,TOR United Bold
+18,1,TOR Ngun Lam White,BOS Low Tide,NY Strangers A
+18,2,NY Strangers A,DC MVP B,BOS Low Tide
+18,3,TOR Ngun Lam White,TOR Legacy Black,DC MVP B
+18,4,BOS Low Tide,NY Strangers A,TOR Ngun Lam White
+18,5,DC MVP B,TOR Legacy Black,NY Strangers A
+18,6,TOR Ngun Lam White,NY Strangers A,TOR Legacy Black
+18,7,BOS Low Tide,DC MVP B,TOR Ngun Lam White
+18,8,NY Strangers A,TOR Legacy Black,BOS Low Tide
+18,9,TOR Ngun Lam White,DC MVP B,TOR Legacy Black
+18,10,BOS Low Tide,TOR Legacy Black,DC MVP B
+19,1,NJ Ronin,CHI United 773,BOS Hurricanes Orange
+19,2,BOS Hurricanes Orange,TOR Qilin,CHI United 773
+19,3,NJ Ronin,NY Strangers Alumni LoChai,TOR Qilin
+19,4,CHI United 773,BOS Hurricanes Orange,NJ Ronin
+19,5,TOR Qilin,NY Strangers Alumni LoChai,BOS Hurricanes Orange
+19,6,NJ Ronin,BOS Hurricanes Orange,NY Strangers Alumni LoChai
+19,7,CHI United 773,TOR Qilin,NJ Ronin
+19,8,BOS Hurricanes Orange,NY Strangers Alumni LoChai,CHI United 773
+19,9,NJ Ronin,TOR Qilin,NY Strangers Alumni LoChai
+19,10,CHI United 773,NY Strangers Alumni LoChai,TOR Qilin
+20,1,TOR Flying Tigers Gold,NY CASCSA Kirin,DC CYC Jrs.
+20,2,DC CYC Jrs.,Montreal Freemason,NY CASCSA Kirin
+20,3,TOR Flying Tigers Gold,BOS Riptide,Montreal Freemason
+20,4,NY CASCSA Kirin,DC CYC Jrs.,TOR Flying Tigers Gold
+20,5,Montreal Freemason,BOS Riptide,DC CYC Jrs.
+20,6,TOR Flying Tigers Gold,DC CYC Jrs.,BOS Riptide
+20,7,NY CASCSA Kirin,Montreal Freemason,TOR Flying Tigers Gold
+20,8,DC CYC Jrs.,BOS Riptide,NY CASCSA Kirin
+20,9,TOR Flying Tigers Gold,Montreal Freemason,BOS Riptide
+20,10,NY CASCSA Kirin,BOS Riptide,Montreal Freemason

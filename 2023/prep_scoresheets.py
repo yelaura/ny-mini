@@ -15,9 +15,9 @@ template_id = "tem_cRPfUVUN3wbjAM" # pdf otter: men's scoresheet
 output_filename = "mens_scoresheets_prefilled"
 
 # womens scoresheet values
-csv_file = "csvs/W_Scoresheets.csv"
-template_id = "tem_jVsaZrDTH8wQqb" # pdf otter: women's scoresheet
-output_filename = "womens_scoresheets_prefilled"
+# csv_file = "csvs/W_Scoresheets.csv"
+# template_id = "tem_jVsaZrDTH8wQqb" # pdf otter: women's scoresheet
+# output_filename = "womens_scoresheets_prefilled"
 
 # import csv
 
