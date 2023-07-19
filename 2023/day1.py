@@ -8,6 +8,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from googleapiclient.errors import HttpError
 
 import pandas as pd
 
@@ -18,14 +19,19 @@ TO_PROCESS = ['Mens', 'Womens']
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and ranges of relevant sheets.
-SHEET_NAME = '1Il8WWQ8IkcqyVdj_P3_RZeh60mDWViy5RmS349CotNc'
+SHEET_NAME = '1Mm_bfIiPzjXhQD77C73Jo_UrbY8fDtEaZvo7BgsZ-WE'
 RESP_RANGE = 'B:K'
 
 OUT_SHEET = SHEET_NAME
-MENS_OUT_RANGE = 'ScoreDisp!D5:E44'
-WOMENS_OUT_RANGE = 'ScoreDisp!K5:L39'
-MENS_TEAMS = 'ScoreDisp!B4:C44'
-WOMENS_TEAMS = 'ScoreDisp!I4:J39'
+MENS_OUT_RANGE = 'ScoreDisp!D5:E59'
+WOMENS_OUT_RANGE = 'ScoreDisp!K5:L49'
+MENS_TEAMS = 'ScoreDisp!B4:C59'
+WOMENS_TEAMS = 'ScoreDisp!I4:J49'
+
+SAMPLE_SPREADSHEET_ID = SHEET_NAME
+SAMPLE_RANGE_NAME = WOMENS_TEAMS
+
+# to do: update sheet names and ranges
 
 SECOND_SHEET_NAME = '10Z5wJMsMjJKOjKtRN_HEJsAPhLWRk7egtfI5BlsZc0Q'
 SECOND_DAY_POOLS_OUT_RANGE_MENS = [ 'Second Day!B3:E22',
@@ -54,11 +60,30 @@ def creds():
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
 
-    service = build('sheets', 'v4', credentials=creds)
+    try:
+        service = build('sheets', 'v4', credentials=creds)
 
-    # Call the Sheets API
-    sheet = service.spreadsheets()
-    return sheet
+        # Call the Sheets API
+        sheets = service.spreadsheets()
+        result = sheets.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                    range=SAMPLE_RANGE_NAME).execute()
+        print(result)
+        values = result.get('values', [])
+
+        if not values:
+            print('No data found.')
+            return
+        
+        print(values)
+
+        return sheets
+
+        # print('Name, Major:')
+        # for row in values:
+        #     # Print columns A and E, which correspond to indices 0 and 4.
+        #     print('%s, %s' % (row[0], row[4]))
+    except HttpError as err:
+        print(err)
 
 
 def get_team_names(division):
@@ -249,5 +274,5 @@ def get_day2_pools(standings, div):
 
 if __name__ == '__main__':
     standings = day1()
-    mens_gold, mens_silver, mens_bronze = get_day2_pools(standings, "Mens")
+    # mens_gold, mens_silver, mens_bronze = get_day2_pools(standings, "Mens")
     # womens_gold, womens_silver, womens_bronze = get_day2_pools(standings, "Womens")
