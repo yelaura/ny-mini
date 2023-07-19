@@ -31,15 +31,13 @@ WOMENS_TEAMS = 'ScoreDisp!I4:J49'
 SAMPLE_SPREADSHEET_ID = SHEET_NAME
 SAMPLE_RANGE_NAME = WOMENS_TEAMS
 
-# to do: update sheet names and ranges
-
-SECOND_SHEET_NAME = '10Z5wJMsMjJKOjKtRN_HEJsAPhLWRk7egtfI5BlsZc0Q'
+SECOND_SHEET_NAME = '1oy9lEDhGdhYyx8OR5cXDxqEX0zLfq7HOTFrkyj4i6Lw'
 SECOND_DAY_POOLS_OUT_RANGE_MENS = [ 'Second Day!B3:E22',
-                                    'Second Day!H3:K12',
-                                    'Second Day!N3:Q12']
+                                    'Second Day!H3:K22',
+                                    'Second Day!N3:Q17']
 SECOND_DAY_POOLS_OUT_RANGE_WOMENS = ['Second Day!B27:E41',
-                                    'Second Day!H27:K36',
-                                    'Second Day!N27:Q36']
+                                    'Second Day!H27:K41',
+                                    'Second Day!N27:Q41']
 
 def creds():
     creds = None
