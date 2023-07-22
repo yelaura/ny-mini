@@ -219,15 +219,23 @@ def day1():
 def get_day2_pools(standings, div):
 
     MENS_NUM_GOLD = 20
+    MENS_NUM_SILVER = 20
+    MENS_NUM_BRONZE = 15
+
     WOMENS_NUM_GOLD = 15
-    NUM_SILVER = 10
-    NUM_BRONZE = 10
+    WOMENS_NUM_SILVER = 15
+    WOMENS_NUM_BRONZE = 15
 
     if div == 'Mens': # mens
         NUM_GOLD = MENS_NUM_GOLD
+        NUM_SILVER = MENS_NUM_SILVER
+        NUM_BRONZE = MENS_NUM_BRONZE
+
         OUT_RANGE = SECOND_DAY_POOLS_OUT_RANGE_MENS
     else:
         NUM_GOLD = WOMENS_NUM_GOLD
+        NUM_SILVER = WOMENS_NUM_SILVER
+        NUM_BRONZE = WOMENS_NUM_BRONZE
         OUT_RANGE = SECOND_DAY_POOLS_OUT_RANGE_WOMENS
 
     print(OUT_RANGE)
