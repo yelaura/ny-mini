@@ -18,22 +18,24 @@ TO_PROCESS = ['Mens', 'Womens']
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and ranges of relevant sheets.
-SHEET_NAME = '10Z5wJMsMjJKOjKtRN_HEJsAPhLWRk7egtfI5BlsZc0Q'
+# Second round sheet name
+SHEET_NAME = '1oy9lEDhGdhYyx8OR5cXDxqEX0zLfq7HOTFrkyj4i6Lw'
 RESP_RANGE = 'B:I'
 
 OUT_SHEET = SHEET_NAME
-MENS_OUT_RANGE = 'ScoreDisp!D5:E44'
-WOMENS_OUT_RANGE = 'ScoreDisp!K5:L39'
-MENS_TEAMS = 'ScoreDisp!B4:C44'
-WOMENS_TEAMS = 'ScoreDisp!I4:J39'
+MENS_OUT_RANGE = 'ScoreDisp!D5:E59'
+WOMENS_OUT_RANGE = 'ScoreDisp!K5:L49'
+MENS_TEAMS = 'ScoreDisp!B5:C59'
+WOMENS_TEAMS = 'ScoreDisp!I5:J49'
 
-PLAYOFFS_SHEET_NAME = '1kMDXvccU1FF85wU6Q3D0cof5M0Vl6L5Q-IwROPtDnwk'
+# to do: make playoffs sheet
+PLAYOFFS_SHEET_NAME = '1ReAijt9wpaVX_hiCv5GOZc3sqPYGVk6KjNzyJXIXXH0'
 MENS_PLAYOFFS_OUT_RANGE = [ 'Mens GOLD!B4:E23',
-                   'Mens SILVER!B4:E13',
-                   'Mens BRONZE!B4:E13']
-WOMENS_PLAYOFFS_OUT_RANGE = ['Womens GOLD!B27:E41',
-                    'Womens SILVER!B4:E13',
-                    'Womens BRONZE!B4:E13']
+                   'Mens SILVER!B4:E23',
+                   'Mens BRONZE!B4:E18']
+WOMENS_PLAYOFFS_OUT_RANGE = ['Womens GOLD!B4:E18',
+                    'Womens SILVER!B4:E18',
+                    'Womens BRONZE!B4:E18']
 
 def creds():
     creds = None
