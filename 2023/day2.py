@@ -30,7 +30,7 @@ WOMENS_TEAMS = 'ScoreDisp!I4:J49'
 
 # to do: make playoffs sheet
 # verify court numbers
-PLAYOFFS_SHEET_NAME = '1ReAijt9wpaVX_hiCv5GOZc3sqPYGVk6KjNzyJXIXXH0'
+PLAYOFFS_SHEET_NAME = '1-FTWZxiApb8c2wAeFRFW7Jjmj3SEV56Px8gBbt5Mt88'
 MENS_PLAYOFFS_OUT_RANGE = [ 'Mens GOLD!B4:E23',
                    'Mens SILVER!B4:E23',
                    'Mens BRONZE!B4:E18']
@@ -81,8 +81,6 @@ def get_team_names(division):
     # convert results
     score_disp['Wins'] = 0
     score_disp['Overall Pts'] = 0
-
-    print(score_disp)
 
     return score_disp
 
@@ -243,6 +241,7 @@ def get_playoffs(standings, div, bracket):
                                 range=IN_RANGE).execute()
     values = pd.DataFrame(result.get('values', []),
                           columns=['Court', 'Team Name', 'Wins', 'Overall Pts'])
+    values = values.astype({'Wins': 'int', 'Overall Pts':'int'})
 
     # sort by pool ranking
     values.sort_values(['Court', 'Wins', 'Overall Pts'],
@@ -254,16 +253,16 @@ def get_playoffs(standings, div, bracket):
 
     for i in range(5):
         to_add = values.groupby('Court').nth(i).sort_values(by=['Wins', 'Overall Pts'],
-                                                                    ascending=False)
+                                                                    ascending=[False, False])
         data_ranked = data_ranked.append(to_add.reset_index())
+
+        print(type(values['Overall Pts'][1]))
 
     data_ranked = data_ranked.reset_index()
     data_ranked.drop('index', axis=1)
     data_ranked = data_ranked.loc[:, 'Court':]
 
-    print(data_ranked)
-
-    # write to second day pools
+    # write to playoffs sheet
     batch_update_values_request_body = {
         # How the input data should be interpreted.
         'value_input_option': 'USER_ENTERED',
@@ -292,5 +291,6 @@ if __name__ == '__main__':
     # get_playoffs(standings, "Womens", "Silver")
     # get_playoffs(standings, "Mens", "Gold")
     # get_playoffs(standings, "Mens", "Bronze")
-    # get_playoffs(standings, "Mens", "Silver")    #
+    get_playoffs(standings, "Mens", "Silver")    #
 
+# need to check head to head calcs
