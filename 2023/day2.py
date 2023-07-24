@@ -293,4 +293,4 @@ if __name__ == '__main__':
     # get_playoffs(standings, "Mens", "Bronze")
     get_playoffs(standings, "Mens", "Silver")    #
 
-# need to check head to head calcs
+# need to do head to head calcs
