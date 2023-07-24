@@ -25,10 +25,11 @@ RESP_RANGE = 'B:I'
 OUT_SHEET = SHEET_NAME
 MENS_OUT_RANGE = 'ScoreDisp!D5:E59'
 WOMENS_OUT_RANGE = 'ScoreDisp!K5:L49'
-MENS_TEAMS = 'ScoreDisp!B5:C59'
-WOMENS_TEAMS = 'ScoreDisp!I5:J49'
+MENS_TEAMS = 'ScoreDisp!B4:C59'
+WOMENS_TEAMS = 'ScoreDisp!I4:J49'
 
 # to do: make playoffs sheet
+# verify court numbers
 PLAYOFFS_SHEET_NAME = '1ReAijt9wpaVX_hiCv5GOZc3sqPYGVk6KjNzyJXIXXH0'
 MENS_PLAYOFFS_OUT_RANGE = [ 'Mens GOLD!B4:E23',
                    'Mens SILVER!B4:E23',
@@ -80,6 +81,8 @@ def get_team_names(division):
     # convert results
     score_disp['Wins'] = 0
     score_disp['Overall Pts'] = 0
+
+    print(score_disp)
 
     return score_disp
 
@@ -200,12 +203,12 @@ def get_playoffs(standings, div, bracket):
     #### print to each playoff bracket
 
     MENS_GOLD_IN_RANGE = 'ScoreDisp!B5:E24'
-    MENS_SILVER_IN_RANGE = 'ScoreDisp!B25:E34'
-    MENS_BRONZE_IN_RANGE = 'ScoreDisp!B35:E44'
+    MENS_SILVER_IN_RANGE = 'ScoreDisp!B25:E44'
+    MENS_BRONZE_IN_RANGE = 'ScoreDisp!B45:E59'
 
     WOMENS_GOLD_IN_RANGE = 'ScoreDisp!I5:L19'
-    WOMENS_SILVER_IN_RANGE = 'ScoreDisp!I20:L29'
-    WOMENS_BRONZE_IN_RANGE = 'ScoreDisp!I30:L39'
+    WOMENS_SILVER_IN_RANGE = 'ScoreDisp!I20:L34'
+    WOMENS_BRONZE_IN_RANGE = 'ScoreDisp!I35:L49'
 
     if div == "Mens" and bracket == "Gold":
         IN_RANGE = MENS_GOLD_IN_RANGE
@@ -284,11 +287,10 @@ def get_playoffs(standings, div, bracket):
 if __name__ == '__main__':
     standings = day2()
     #
-    # get_playoffs(standings, "Mens", "Gold")
-    # get_playoffs(standings, "Mens", "Silver")
-    # get_playoffs(standings, "Mens", "Bronze")
-    #
     # get_playoffs(standings, "Womens", "Gold")
-
-    # get_playoffs(standings, "Womens", "Silver")
     # get_playoffs(standings, "Womens", "Bronze")
+    # get_playoffs(standings, "Womens", "Silver")
+    # get_playoffs(standings, "Mens", "Gold")
+    # get_playoffs(standings, "Mens", "Bronze")
+    # get_playoffs(standings, "Mens", "Silver")    #
+

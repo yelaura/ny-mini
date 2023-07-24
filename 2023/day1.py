@@ -280,5 +280,5 @@ def get_day2_pools(standings, div):
 
 if __name__ == '__main__':
     standings = day1()
-    # mens_gold, mens_silver, mens_bronze = get_day2_pools(standings, "Mens")
+    mens_gold, mens_silver, mens_bronze = get_day2_pools(standings, "Mens")
     # womens_gold, womens_silver, womens_bronze = get_day2_pools(standings, "Womens")
