@@ -123,7 +123,9 @@ def get_brackets(standings, div, num_gold, num_silver, num_bronze):
     for i in range(5):
         to_add = data.groupby('Court').nth(i).sort_values(by=['Wins', 'Overall Pts'],
                                                                     ascending=False)
-        data_ranked = data_ranked.append(to_add.reset_index())
+        # data_ranked = data_ranked.append(to_add.reset_index())
+        pd.concat([data_ranked, to_add.reset_index()])
+
 
     data_ranked = data_ranked.reset_index()
     data_ranked.drop('index', axis=1)

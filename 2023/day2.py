@@ -194,6 +194,16 @@ def day2():
 
     return standings # mens, womens
 
+def head_to_head_winner(team_1_name, team_2_name, values):
+    # values = sheet_in
+
+    # assuming they played 2 sets
+
+    # find team_1_name vs team_2_name
+
+    values.loc[((values['Team 1 Name'] == team_1_name) and (values['Team 2 Name'] == team_2_name)) or 
+        ((values['Team 2 Name'] == team_1_name) and (values['Team 1 Name'] == team_2_name))]
+
 def get_playoffs(standings, div, bracket):
 
     #### needs to be rewritten for playoffs
@@ -254,9 +264,13 @@ def get_playoffs(standings, div, bracket):
     for i in range(5):
         to_add = values.groupby('Court').nth(i).sort_values(by=['Wins', 'Overall Pts'],
                                                                     ascending=[False, False])
-        data_ranked = data_ranked.append(to_add.reset_index())
+        
+        head_to_head_needed = to_add.duplicated(subset=['Wins']).any()
+        print(to_add)
+        print(head_to_head_needed)
 
-        print(type(values['Overall Pts'][1]))
+        # data_ranked = data_ranked.append(to_add.reset_index())
+        pd.concat([data_ranked, to_add.reset_index()])
 
     data_ranked = data_ranked.reset_index()
     data_ranked.drop('index', axis=1)
