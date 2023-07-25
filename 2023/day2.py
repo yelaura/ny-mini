@@ -20,7 +20,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 # The ID and ranges of relevant sheets.
 # Second round sheet name
 SHEET_NAME = '1oy9lEDhGdhYyx8OR5cXDxqEX0zLfq7HOTFrkyj4i6Lw'
-RESP_RANGE = 'B:I'
+RESP_RANGE = 'B:K'
 
 OUT_SHEET = SHEET_NAME
 MENS_OUT_RANGE = 'ScoreDisp!D5:E59'
@@ -28,15 +28,15 @@ WOMENS_OUT_RANGE = 'ScoreDisp!K5:L49'
 MENS_TEAMS = 'ScoreDisp!B4:C59'
 WOMENS_TEAMS = 'ScoreDisp!I4:J49'
 
-# to do: make playoffs sheet
-# verify court numbers
 PLAYOFFS_SHEET_NAME = '1-FTWZxiApb8c2wAeFRFW7Jjmj3SEV56Px8gBbt5Mt88'
 MENS_PLAYOFFS_OUT_RANGE = [ 'Mens GOLD!B4:E23',
                    'Mens SILVER!B4:E23',
                    'Mens BRONZE!B4:E18']
-WOMENS_PLAYOFFS_OUT_RANGE = ['Womens GOLD!B4:E18',
+WOMENS_PLAYOFFS_OUT_RANGE = ['Womens GOLD!B4:F18',
                     'Womens SILVER!B4:E18',
                     'Womens BRONZE!B4:E18']
+
+SCORES = pd.DataFrame()
 
 def creds():
     creds = None
@@ -138,35 +138,27 @@ def day2():
 
     ################ start processing data #########################
 
-        sheet_in = pd.DataFrame(values[1:], columns=values[0])
-        sheet_in = sheet_in.iloc[:, 5:]
-        sheet_in.iloc[:, 2:] = pd.DataFrame(sheet_in.iloc[:, 2:], dtype=int)
-        sheet_in['Game 1 Win'] = sheet_in['Team 1 Score'] - sheet_in['Team 2 Score']
-        # sheet_in['Game 2 Win'] = sheet_in['Team 1 Score 2'] - sheet_in['Team 2 Score 2']
-        sheet_in['Total Pt Diff'] = sheet_in['Game 1 Win']
+        SCORES = pd.DataFrame(values[1:], columns=values[0])
+        SCORES = SCORES.iloc[:, 5:]
+        SCORES.iloc[:, 2:] = pd.DataFrame(SCORES.iloc[:, 2:], dtype=int)
+        SCORES['Game 1 Win'] = SCORES['Team 1 Score'] - SCORES['Team 2 Score']
+        # SCORES['Game 2 Win'] = SCORES['Team 1 Score 2'] - SCORES['Team 2 Score 2']
+        SCORES['Total Pt Diff'] = SCORES['Game 1 Win']
 
-        for ind in sheet_in.index: # iterate through each row
+        for ind in SCORES.index: # iterate through each row
 
-            if (sheet_in['Game 1 Win'][ind]) > 0: # if pt diff is positive
-                winning_team = sheet_in['Team 1 Name'][ind]
+            if (SCORES['Game 1 Win'][ind]) > 0: # if pt diff is positive
+                winning_team = SCORES['Team 1 Name'][ind]
             else:
-                winning_team = sheet_in['Team 2 Name'][ind]
+                winning_team = SCORES['Team 2 Name'][ind]
 
             ind_win = data[data['Team Name'] == winning_team].index[0]
             data.at[ind_win, 'Wins'] = data.at[ind_win, 'Wins'] + 1
 
-            # if (sheet_in['Game 2 Win'][ind]) > 0:
-            #     winning_team = sheet_in['Team 1 Name'][ind]
-            # else:
-            #     winning_team = sheet_in['Team 2 Name'][ind]
-
-            # ind_win = data[data['Team Name'] == winning_team].index[0]
-            # data.at[ind_win, 'Wins'] = data['Wins'][ind_win] + 1
-
-            ind_1 = data[data['Team Name'] == sheet_in['Team 1 Name'][ind]].index[0]
-            ind_2 = data[data['Team Name'] == sheet_in['Team 2 Name'][ind]].index[0]
-            data.at[ind_1, 'Overall Pts'] = data.at[ind_1, 'Overall Pts'] + sheet_in.at[ind, 'Total Pt Diff']
-            data.at[ind_2, 'Overall Pts'] = data.at[ind_2, 'Overall Pts'] - sheet_in.at[ind, 'Total Pt Diff']
+            ind_1 = data[data['Team Name'] == SCORES['Team 1 Name'][ind]].index[0]
+            ind_2 = data[data['Team Name'] == SCORES['Team 2 Name'][ind]].index[0]
+            data.at[ind_1, 'Overall Pts'] = data.at[ind_1, 'Overall Pts'] + SCORES.at[ind, 'Total Pt Diff']
+            data.at[ind_2, 'Overall Pts'] = data.at[ind_2, 'Overall Pts'] - SCORES.at[ind, 'Total Pt Diff']
 
             # print data to google sheet
 
@@ -188,21 +180,42 @@ def day2():
                                              body=batch_update_values_request_body)
         response = request.execute()
 
-        pprint(response)
+        # pprint(response)
 
         standings.append(data)
 
     return standings # mens, womens
 
-def head_to_head_winner(team_1_name, team_2_name, values):
-    # values = sheet_in
+def get_HTH_winner(team_names, div):
 
-    # assuming they played 2 sets
+    # get scores # 
 
-    # find team_1_name vs team_2_name
+    if div == 'Mens':
+        RESP_RANGE = 'Mens!' + 'A:I'
+        OUT_RANGE = MENS_OUT_RANGE
+    else:
+        OUT_RANGE = WOMENS_OUT_RANGE
+        RESP_RANGE = 'Womens!' + 'A:I'
 
-    values.loc[((values['Team 1 Name'] == team_1_name) and (values['Team 2 Name'] == team_2_name)) or 
-        ((values['Team 2 Name'] == team_1_name) and (values['Team 1 Name'] == team_2_name))]
+    data = get_team_names(div)
+
+    sheet = creds()
+    result = sheet.values().get(spreadsheetId=SHEET_NAME,
+                                range=RESP_RANGE).execute()
+    values = result.get('values', [])
+
+    SCORES = pd.DataFrame(values[1:], columns=values[0])
+    SCORES = SCORES.iloc[:, 5:]
+    SCORES.iloc[:, 2:] = pd.DataFrame(SCORES.iloc[:, 2:], dtype=int)
+
+    # look for team names in scoresheet
+    HTH_game = SCORES.loc[(SCORES['Team 1 Name'].isin(team_names)) & (SCORES['Team 2 Name'].isin(team_names))].reset_index(drop=True)
+
+    # who won?
+    if (int(HTH_game['Team 1 Score']) > int(HTH_game['Team 2 Score'])):
+        return HTH_game.at[0, 'Team 1 Name']
+    else:
+        return HTH_game.at[0, 'Team 2 Name']
 
 def get_playoffs(standings, div, bracket):
 
@@ -252,29 +265,61 @@ def get_playoffs(standings, div, bracket):
     values = pd.DataFrame(result.get('values', []),
                           columns=['Court', 'Team Name', 'Wins', 'Overall Pts'])
     values = values.astype({'Wins': 'int', 'Overall Pts':'int'})
+    
+    # set up for HTH calcs
+    values['HTH'] = 0
 
-    # sort by pool ranking
-    values.sort_values(['Court', 'Wins', 'Overall Pts'],
-                     ascending=[False, False, False],
+    # for HTH column, add # of sets that were won by that team against the other team
+    # values.loc[11, 'HTH'] = 1
+
+    # need to consider only if it's 2 way tie
+    # need to ignore when there are multiple 2 way ties within each pool
+    
+    dupes = values[values.duplicated(subset=['Court', 'Wins'], keep=False)]
+
+    for court in dupes['Court'].unique():
+        court_teams = dupes[dupes['Court'] == court]
+        
+        # count wins
+        wins = pd.DataFrame(court_teams['Wins'].value_counts())
+        wins['Freq'] = wins['Wins']
+        wins['Wins'] = wins.index
+        wins.reset_index()
+
+        for index, row in wins.iterrows():
+            if (row['Freq'] == 2):
+                # useful info: court, wins
+                tiebreaker_needed = dupes.loc[(dupes['Court'] == court) & (dupes['Wins'] == row['Wins'])]
+                
+                # find team names
+                team_names = tiebreaker_needed['Team Name'].to_list()
+
+                # find HTH winner
+                winner_name = get_HTH_winner(team_names, div)
+
+                values.loc[values['Team Name'] == winner_name, 'HTH'] = 1
+
+    # sort to get pool ranking (wins, HTH, then points)
+    # point diff could be useful for ranking if head to head is split
+
+    values.sort_values(['Court', 'Wins', 'HTH', 'Overall Pts'],
+                     ascending=[False, False, False, False],
                      inplace=True,
                      ignore_index=True)
-
+    
     data_ranked = pd.DataFrame(columns=values.columns)
 
     for i in range(5):
-        to_add = values.groupby('Court').nth(i).sort_values(by=['Wins', 'Overall Pts'],
-                                                                    ascending=[False, False])
+        to_add = values.groupby('Court').nth(i).sort_values(by=['Wins', 'HTH', 'Overall Pts'],
+                                                                    ascending=[False, False, False])
         
-        head_to_head_needed = to_add.duplicated(subset=['Wins']).any()
-        print(to_add)
-        print(head_to_head_needed)
-
         # data_ranked = data_ranked.append(to_add.reset_index())
-        pd.concat([data_ranked, to_add.reset_index()])
+        data_ranked=pd.concat([data_ranked, to_add.reset_index()], axis=0, ignore_index=True )
+        # print(to_add)
 
-    data_ranked = data_ranked.reset_index()
-    data_ranked.drop('index', axis=1)
-    data_ranked = data_ranked.loc[:, 'Court':]
+    # data_ranked = data_ranked.reset_index()
+    # data_ranked.drop('index', axis=1)
+    # data_ranked = data_ranked.loc[:, 'Court':]
 
     # write to playoffs sheet
     batch_update_values_request_body = {
@@ -295,16 +340,14 @@ def get_playoffs(standings, div, bracket):
                                          body=batch_update_values_request_body)
     response = request.execute()
 
-    pprint(response)
+    # pprint(response)
 
 if __name__ == '__main__':
     standings = day2()
     #
-    # get_playoffs(standings, "Womens", "Gold")
+    get_playoffs(standings, "Womens", "Gold")
     # get_playoffs(standings, "Womens", "Bronze")
     # get_playoffs(standings, "Womens", "Silver")
     # get_playoffs(standings, "Mens", "Gold")
     # get_playoffs(standings, "Mens", "Bronze")
-    get_playoffs(standings, "Mens", "Silver")    #
-
-# need to do head to head calcs
+    # get_playoffs(standings, "Mens", "Silver")    #
