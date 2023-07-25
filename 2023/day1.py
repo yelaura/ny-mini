@@ -31,13 +31,15 @@ WOMENS_TEAMS = 'ScoreDisp!I4:J49'
 SAMPLE_SPREADSHEET_ID = SHEET_NAME
 SAMPLE_RANGE_NAME = WOMENS_TEAMS
 
-SECOND_SHEET_NAME = '1oy9lEDhGdhYyx8OR5cXDxqEX0zLfq7HOTFrkyj4i6Lw'
-SECOND_DAY_POOLS_OUT_RANGE_MENS = [ 'Second Day!B3:E22',
-                                    'Second Day!H3:K22',
-                                    'Second Day!N3:Q17']
-SECOND_DAY_POOLS_OUT_RANGE_WOMENS = ['Second Day!B27:E41',
-                                    'Second Day!H27:K41',
-                                    'Second Day!N27:Q41']
+SECOND_SHEET_NAME = '13or4OZ275uDw0mliVY8n-zYqLom-mB18duektna9nZc'
+SECOND_DAY_POOLS_OUT_RANGE_MENS = [ 'Second Day!B3:F22',
+                                    'Second Day!H3:L22',
+                                    'Second Day!N3:R17']
+SECOND_DAY_POOLS_OUT_RANGE_WOMENS = ['Second Day!B27:F41',
+                                    'Second Day!H27:L41',
+                                    'Second Day!N27:R41']
+
+SCORES = pd.DataFrame()
 
 def creds():
     creds = None
@@ -65,15 +67,12 @@ def creds():
         sheets = service.spreadsheets()
         result = sheets.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
                                     range=SAMPLE_RANGE_NAME).execute()
-        print(result)
         values = result.get('values', [])
 
         if not values:
             print('No data found.')
             return
         
-        print(values)
-
         return sheets
 
         # print('Name, Major:')
@@ -118,14 +117,56 @@ def get_brackets(standings, div, num_gold, num_silver, num_bronze):
                           inplace=True,
                           ignore_index=True)
 
-    data_ranked = pd.DataFrame(columns=data.columns)
+# set up for HTH calcs
+    values = data.copy()
+    values['HTH'] = 0
+
+    # for HTH column, add # of sets that were won by that team against the other team
+    # values.loc[11, 'HTH'] = 1
+
+    # need to consider only if it's 2 way tie
+    # need to ignore when there are multiple 2 way ties within each pool
+    
+    dupes = values[values.duplicated(subset=['Court', 'Wins'], keep=False)]
+
+    for court in dupes['Court'].unique():
+        court_teams = dupes[dupes['Court'] == court]
+        
+        # count wins
+        wins = pd.DataFrame(court_teams['Wins'].value_counts())
+        wins['Freq'] = wins['Wins']
+        wins['Wins'] = wins.index
+        wins.reset_index()
+
+        for index, row in wins.iterrows():
+            if (row['Freq'] == 2):
+                # useful info: court, wins
+                tiebreaker_needed = dupes.loc[(dupes['Court'] == court) & (dupes['Wins'] == row['Wins'])]
+                
+                # find team names
+                team_names = tiebreaker_needed['Team Name'].to_list()
+
+                # find HTH winner
+                winner_name = get_HTH_winner(team_names, div)
+
+                if (winner_name != None): 
+                    values.loc[values['Team Name'] == winner_name, 'HTH'] = 1
+
+    # sort to get pool ranking (wins, HTH, then points)
+    # point diff could be useful for ranking if head to head is split
+
+    values.sort_values(['Court', 'Wins', 'HTH', 'Overall Pts'],
+                     ascending=[False, False, False, False],
+                     inplace=True,
+                     ignore_index=True)
+    
+    data_ranked = pd.DataFrame(columns=values.columns)
 
     for i in range(5):
-        to_add = data.groupby('Court').nth(i).sort_values(by=['Wins', 'Overall Pts'],
-                                                                    ascending=False)
+        to_add = values.groupby('Court').nth(i).sort_values(by=['Wins', 'HTH', 'Overall Pts'],
+                                                                    ascending=[False, False, False])
         # data_ranked = data_ranked.append(to_add.reset_index())
-        pd.concat([data_ranked, to_add.reset_index()])
-
+        data_ranked=pd.concat([data_ranked, to_add.reset_index()], axis=0, ignore_index=True )
 
     data_ranked = data_ranked.reset_index()
     data_ranked.drop('index', axis=1)
@@ -218,6 +259,42 @@ def day1():
 
     return standings # mens, womens
 
+def get_HTH_winner(team_names, div):
+
+    # get scores # 
+
+    if div == 'Mens':
+        RESP_RANGE = 'Mens!' + 'A:K'
+        OUT_RANGE = MENS_OUT_RANGE
+    else:
+        OUT_RANGE = WOMENS_OUT_RANGE
+        RESP_RANGE = 'Womens!' + 'A:K'
+
+    data = get_team_names(div)
+
+    sheet = creds()
+    result = sheet.values().get(spreadsheetId=SHEET_NAME,
+                                range=RESP_RANGE).execute()
+    values = result.get('values', [])
+
+    SCORES = pd.DataFrame(values[1:], columns=values[0])
+    SCORES = SCORES.iloc[:, 5:]
+    SCORES.iloc[:, 2:] = pd.DataFrame(SCORES.iloc[:, 2:], dtype=int)
+
+    # look for team names in scoresheet
+    HTH_game = SCORES.loc[(SCORES['Team 1 Name'].isin(team_names)) & (SCORES['Team 2 Name'].isin(team_names))].reset_index(drop=True)
+    print(HTH_game)
+
+    pt_diff = int(HTH_game['Team 1 Score']) + int(HTH_game['Team 1 Score 2']) - int(HTH_game['Team 2 Score']) - int(HTH_game['Team 2 Score 2'])
+
+    # who won?
+    if pt_diff > 0:
+        return HTH_game.at[0, 'Team 1 Name']
+    elif pt_diff < 0:
+        return HTH_game.at[0, 'Team 2 Name']
+    else: 
+        return None
+
 def get_day2_pools(standings, div):
 
     MENS_NUM_GOLD = 20
@@ -240,8 +317,6 @@ def get_day2_pools(standings, div):
         NUM_BRONZE = WOMENS_NUM_BRONZE
         OUT_RANGE = SECOND_DAY_POOLS_OUT_RANGE_WOMENS
 
-    print(OUT_RANGE)
-
     pools = get_brackets(standings, div, NUM_GOLD, NUM_SILVER, NUM_BRONZE)
 
     sheet = creds()
@@ -254,7 +329,6 @@ def get_day2_pools(standings, div):
 
         OUT = OUT_RANGE[flight]
         data = pools[flight].reset_index(inplace=False).drop('index', axis=1)
-        print(data)
 
         # write to second day pools
         batch_update_values_request_body = {

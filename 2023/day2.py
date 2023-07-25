@@ -212,10 +212,13 @@ def get_HTH_winner(team_names, div):
     HTH_game = SCORES.loc[(SCORES['Team 1 Name'].isin(team_names)) & (SCORES['Team 2 Name'].isin(team_names))].reset_index(drop=True)
 
     # who won?
-    if (int(HTH_game['Team 1 Score']) > int(HTH_game['Team 2 Score'])):
+    pt_diff = int(HTH_game['Team 1 Score']) > int(HTH_game['Team 2 Score'])
+    if pt_diff > 0:
         return HTH_game.at[0, 'Team 1 Name']
-    else:
+    elif pt_diff < 0:
         return HTH_game.at[0, 'Team 2 Name']
+    else:
+        return None
 
 def get_playoffs(standings, div, bracket):
 
@@ -297,7 +300,8 @@ def get_playoffs(standings, div, bracket):
                 # find HTH winner
                 winner_name = get_HTH_winner(team_names, div)
 
-                values.loc[values['Team Name'] == winner_name, 'HTH'] = 1
+                if (winner_name != None): 
+                    values.loc[values['Team Name'] == winner_name, 'HTH'] = 1
 
     # sort to get pool ranking (wins, HTH, then points)
     # point diff could be useful for ranking if head to head is split
