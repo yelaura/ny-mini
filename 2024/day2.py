@@ -28,13 +28,13 @@ WOMENS_OUT_RANGE = 'ScoreDisp!K5:L49'
 MENS_TEAMS = 'ScoreDisp!B4:C64'
 WOMENS_TEAMS = 'ScoreDisp!I4:J49'
 
-PLAYOFFS_SHEET_NAME = '1-FTWZxiApb8c2wAeFRFW7Jjmj3SEV56Px8gBbt5Mt88'
-MENS_PLAYOFFS_OUT_RANGE = [ 'Mens GOLD!B4:E28',
-                   'Mens SILVER!B4:E23',
-                   'Mens BRONZE!B4:E18']
-WOMENS_PLAYOFFS_OUT_RANGE = ['Womens GOLD!B4:E18',
-                    'Womens SILVER!B4:E18',
-                    'Womens BRONZE!B4:E18']
+PLAYOFFS_SHEET_NAME = '1txuR1oXd1_BGa8eBazgrKHNudynOjkZO43GcdEkrwrc'
+MENS_PLAYOFFS_OUT_RANGE = [ 'Mens GOLD!B4:G28',
+                   'Mens SILVER!B4:G23',
+                   'Mens BRONZE!B4:G18']
+WOMENS_PLAYOFFS_OUT_RANGE = ['Womens GOLD!B4:G18',
+                    'Womens SILVER!B4:G18',
+                    'Womens BRONZE!B4:G18']
 
 SCORES = pd.DataFrame()
 
@@ -226,9 +226,9 @@ def get_playoffs(standings, div, bracket):
     ### rank teams in second pool play
     #### print to each playoff bracket
 
-    MENS_GOLD_IN_RANGE = 'ScoreDisp!B5:E24'
-    MENS_SILVER_IN_RANGE = 'ScoreDisp!B25:E44'
-    MENS_BRONZE_IN_RANGE = 'ScoreDisp!B45:E59'
+    MENS_GOLD_IN_RANGE = 'ScoreDisp!B5:E29'
+    MENS_SILVER_IN_RANGE = 'ScoreDisp!B30:E49'
+    MENS_BRONZE_IN_RANGE = 'ScoreDisp!B50:E64'
 
     WOMENS_GOLD_IN_RANGE = 'ScoreDisp!I5:L19'
     WOMENS_SILVER_IN_RANGE = 'ScoreDisp!I20:L34'
@@ -237,27 +237,27 @@ def get_playoffs(standings, div, bracket):
     if div == "Mens" and bracket == "Gold":
         IN_RANGE = MENS_GOLD_IN_RANGE
         OUT_RANGE = MENS_PLAYOFFS_OUT_RANGE[0]
-        NUM_POOLS = 4
+        NUM_POOLS = 5
     elif div == "Mens" and bracket == "Silver":
         IN_RANGE = MENS_SILVER_IN_RANGE
         OUT_RANGE = MENS_PLAYOFFS_OUT_RANGE[1]
-        NUM_POOLS = 2
+        NUM_POOLS = 4
     elif div == "Mens" and bracket == "Bronze":
         IN_RANGE = MENS_BRONZE_IN_RANGE
         OUT_RANGE = MENS_PLAYOFFS_OUT_RANGE[2]
-        NUM_POOLS = 2
+        NUM_POOLS = 3
     elif div == "Womens" and bracket == "Gold":
         IN_RANGE = WOMENS_GOLD_IN_RANGE
         OUT_RANGE = WOMENS_PLAYOFFS_OUT_RANGE[0]
-        NUM_POOLS = 2
+        NUM_POOLS = 3
     elif div == "Womens" and bracket == "Silver":
         IN_RANGE = WOMENS_SILVER_IN_RANGE
         OUT_RANGE = WOMENS_PLAYOFFS_OUT_RANGE[1]
-        NUM_POOLS = 2
+        NUM_POOLS = 3
     elif div == "Womens" and bracket == "Bronze":
         IN_RANGE = WOMENS_BRONZE_IN_RANGE
         OUT_RANGE = WOMENS_PLAYOFFS_OUT_RANGE[2]
-        NUM_POOLS = 2
+        NUM_POOLS = 3
     else:
         return ''
 
@@ -284,10 +284,13 @@ def get_playoffs(standings, div, bracket):
         court_teams = dupes[dupes['Court'] == court]
         
         # count wins
-        wins = pd.DataFrame(court_teams['Wins'].value_counts())
-        wins['Freq'] = wins['Wins']
-        wins['Wins'] = wins.index
-        wins.reset_index()
+
+        wins = pd.DataFrame(court_teams['Wins'].value_counts()).reset_index(drop=False)
+        wins.columns = ['Wins','Freq']
+        # wins = pd.DataFrame(court_teams['Wins'].value_counts())
+        # wins['Freq'] = wins['Wins']
+        # wins['Wins'] = wins.index
+        # wins.reset_index()
 
         for index, row in wins.iterrows():
             if (row['Freq'] == 2):
@@ -352,6 +355,6 @@ if __name__ == '__main__':
     # get_playoffs(standings, "Womens", "Gold")
     # get_playoffs(standings, "Womens", "Bronze")
     # get_playoffs(standings, "Womens", "Silver")
-    # get_playoffs(standings, "Mens", "Gold")
+    get_playoffs(standings, "Mens", "Gold")
     # get_playoffs(standings, "Mens", "Bronze")
-    # get_playoffs(standings, "Mens", "Silver")    #
+    get_playoffs(standings, "Mens", "Silver") 

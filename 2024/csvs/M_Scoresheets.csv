@@ -1,0 +1,121 @@
+Court,Game,Team 1,Team 2,Work Team
+03,1,DC On Leong Thunder B,MTL Freemason M2,BOS Low Tide
+03,2,BOS Low Tide,LA Fresh,MTL Freemason M2
+03,3,DC On Leong Thunder B,NY Strangers A,LA Fresh
+03,4,MTL Freemason M2,BOS Low Tide,DC On Leong Thunder B
+03,5,LA Fresh,NY Strangers A,BOS Low Tide
+03,6,DC On Leong Thunder B,BOS Low Tide,NY Strangers A
+03,7,MTL Freemason M2,LA Fresh,DC On Leong Thunder B
+03,8,BOS Low Tide,NY Strangers A,MTL Freemason M2
+03,9,DC On Leong Thunder B,LA Fresh,NY Strangers A
+03,10,MTL Freemason M2,NY Strangers A,LA Fresh
+04,1,DC CYC JRs,BOS Hurricanes Mens Blue,TOR United Bold
+04,2,TOR United Bold,NY Freemasons,BOS Hurricanes Mens Blue
+04,3,DC CYC JRs,TOR Legacy Black,NY Freemasons
+04,4,BOS Hurricanes Mens Blue,TOR United Bold,DC CYC JRs
+04,5,NY Freemasons,TOR Legacy Black,TOR United Bold
+04,6,DC CYC JRs,TOR United Bold,TOR Legacy Black
+04,7,BOS Hurricanes Mens Blue,NY Freemasons,DC CYC JRs
+04,8,TOR United Bold,TOR Legacy Black,BOS Hurricanes Mens Blue
+04,9,DC CYC JRs,NY Freemasons,TOR Legacy Black
+04,10,BOS Hurricanes Mens Blue,TOR Legacy Black,NY Freemasons
+05,1,TOR Connex Men's A,MTL Sunbirds Pink,SF Sky
+05,2,SF Sky,NY Strangers C,MTL Sunbirds Pink
+05,3,TOR Connex Men's A,NY Freemasons B,NY Strangers C
+05,4,MTL Sunbirds Pink,SF Sky,TOR Connex Men's A
+05,5,NY Strangers C,NY Freemasons B,SF Sky
+05,6,TOR Connex Men's A,SF Sky,NY Freemasons B
+05,7,MTL Sunbirds Pink,NY Strangers C,TOR Connex Men's A
+05,8,SF Sky,NY Freemasons B,MTL Sunbirds Pink
+05,9,TOR Connex Men's A,NY Strangers C,NY Freemasons B
+05,10,MTL Sunbirds Pink,NY Freemasons B,NY Strangers C
+06,1,BOS Knights A,TOR Connex Men's C,NY Strangers Rice Cookers
+06,2,NY Strangers Rice Cookers,TOR Ngun Lam Blue,TOR Connex Men's C
+06,3,BOS Knights A,PHL Suns A,TOR Ngun Lam Blue
+06,4,TOR Connex Men's C,NY Strangers Rice Cookers,BOS Knights A
+06,5,TOR Ngun Lam Blue,PHL Suns A,NY Strangers Rice Cookers
+06,6,BOS Knights A,NY Strangers Rice Cookers,PHL Suns A
+06,7,TOR Connex Men's C,TOR Ngun Lam Blue,BOS Knights A
+06,8,NY Strangers Rice Cookers,PHL Suns A,TOR Connex Men's C
+06,9,BOS Knights A,TOR Ngun Lam Blue,PHL Suns A
+06,10,TOR Connex Men's C,PHL Suns A,TOR Ngun Lam Blue
+08,1,BOS Knights C,TOR Connex Men's B,DC Yee Fung Toy Thunder A
+08,2,DC Yee Fung Toy Thunder A,SF Dynasty Gee Lick Impact,TOR Connex Men's B
+08,3,BOS Knights C,NY Strangers Alumni,SF Dynasty Gee Lick Impact
+08,4,TOR Connex Men's B,DC Yee Fung Toy Thunder A,BOS Knights C
+08,5,SF Dynasty Gee Lick Impact,NY Strangers Alumni,DC Yee Fung Toy Thunder A
+08,6,BOS Knights C,DC Yee Fung Toy Thunder A,NY Strangers Alumni
+08,7,TOR Connex Men's B,SF Dynasty Gee Lick Impact,BOS Knights C
+08,8,DC Yee Fung Toy Thunder A,NY Strangers Alumni,TOR Connex Men's B
+08,9,BOS Knights C,SF Dynasty Gee Lick Impact,NY Strangers Alumni
+08,10,TOR Connex Men's B,NY Strangers Alumni,SF Dynasty Gee Lick Impact
+09,1,BOS Hurricanes Mens Black,TOR Ngun Lam White,NY Strangers TigerBalm Alumni
+09,2,NY Strangers TigerBalm Alumni,PHL Suns B,TOR Ngun Lam White
+09,3,BOS Hurricanes Mens Black,MTL Freemason M1,PHL Suns B
+09,4,TOR Ngun Lam White,NY Strangers TigerBalm Alumni,BOS Hurricanes Mens Black
+09,5,PHL Suns B,MTL Freemason M1,NY Strangers TigerBalm Alumni
+09,6,BOS Hurricanes Mens Black,NY Strangers TigerBalm Alumni,MTL Freemason M1
+09,7,TOR Ngun Lam White,PHL Suns B,BOS Hurricanes Mens Black
+09,8,NY Strangers TigerBalm Alumni,MTL Freemason M1,TOR Ngun Lam White
+09,9,BOS Hurricanes Mens Black,PHL Suns B,MTL Freemason M1
+09,10,TOR Ngun Lam White,MTL Freemason M1,PHL Suns B
+10,1,SF Tien Lung Dragons,NY CASCSA Kirin,BOS Knights B
+10,2,BOS Knights B,TOR Shen Long,NY CASCSA Kirin
+10,3,SF Tien Lung Dragons,DC CYC Boomin,TOR Shen Long
+10,4,NY CASCSA Kirin,BOS Knights B,SF Tien Lung Dragons
+10,5,TOR Shen Long,DC CYC Boomin,BOS Knights B
+10,6,SF Tien Lung Dragons,BOS Knights B,DC CYC Boomin
+10,7,NY CASCSA Kirin,TOR Shen Long,SF Tien Lung Dragons
+10,8,BOS Knights B,DC CYC Boomin,NY CASCSA Kirin
+10,9,SF Tien Lung Dragons,TOR Shen Long,DC CYC Boomin
+10,10,NY CASCSA Kirin,DC CYC Boomin,TOR Shen Long
+11,1,TOR United Brave,CHI United 773,NY Horizon Omega
+11,2,NY Horizon Omega,PHL CIA A,CHI United 773
+11,3,TOR United Brave,NY Vikings Red,PHL CIA A
+11,4,CHI United 773,NY Horizon Omega,TOR United Brave
+11,5,PHL CIA A,NY Vikings Red,NY Horizon Omega
+11,6,TOR United Brave,NY Horizon Omega,NY Vikings Red
+11,7,CHI United 773,PHL CIA A,TOR United Brave
+11,8,NY Horizon Omega,NY Vikings Red,CHI United 773
+11,9,TOR United Brave,PHL CIA A,NY Vikings Red
+11,10,CHI United 773,NY Vikings Red,PHL CIA A
+17,1,BOS Rising Tide,TOR Ngun Lam Red,DC MVP Black
+17,2,DC MVP Black,NY CASCSA Kirin Jr,TOR Ngun Lam Red
+17,3,BOS Rising Tide,MTL Sunbirds Gold,NY CASCSA Kirin Jr
+17,4,TOR Ngun Lam Red,DC MVP Black,BOS Rising Tide
+17,5,NY CASCSA Kirin Jr,MTL Sunbirds Gold,DC MVP Black
+17,6,BOS Rising Tide,DC MVP Black,MTL Sunbirds Gold
+17,7,TOR Ngun Lam Red,NY CASCSA Kirin Jr,BOS Rising Tide
+17,8,DC MVP Black,MTL Sunbirds Gold,TOR Ngun Lam Red
+17,9,BOS Rising Tide,NY CASCSA Kirin Jr,MTL Sunbirds Gold
+17,10,TOR Ngun Lam Red,MTL Sunbirds Gold,NY CASCSA Kirin Jr
+19,1,TOR Legacy Bounce,BOS Rip Tide,NY Horizon Alpha
+19,2,NY Horizon Alpha,DC MVP Red,BOS Rip Tide
+19,3,TOR Legacy Bounce,BOS Freemasons Black,DC MVP Red
+19,4,BOS Rip Tide,NY Horizon Alpha,TOR Legacy Bounce
+19,5,DC MVP Red,BOS Freemasons Black,NY Horizon Alpha
+19,6,TOR Legacy Bounce,NY Horizon Alpha,BOS Freemasons Black
+19,7,BOS Rip Tide,DC MVP Red,TOR Legacy Bounce
+19,8,NY Horizon Alpha,BOS Freemasons Black,BOS Rip Tide
+19,9,TOR Legacy Bounce,DC MVP Red,BOS Freemasons Black
+19,10,BOS Rip Tide,BOS Freemasons Black,DC MVP Red
+20,1,CHI United 312,TOR Flying Tigers Gold,NY Strangers B
+20,2,NY Strangers B,BOS Freemasons Red,TOR Flying Tigers Gold
+20,3,CHI United 312,NY NVNL Azure Dragons,BOS Freemasons Red
+20,4,TOR Flying Tigers Gold,NY Strangers B,CHI United 312
+20,5,BOS Freemasons Red,NY NVNL Azure Dragons,NY Strangers B
+20,6,CHI United 312,NY Strangers B,NY NVNL Azure Dragons
+20,7,TOR Flying Tigers Gold,BOS Freemasons Red,CHI United 312
+20,8,NY Strangers B,NY NVNL Azure Dragons,TOR Flying Tigers Gold
+20,9,CHI United 312,BOS Freemasons Red,NY NVNL Azure Dragons
+20,10,TOR Flying Tigers Gold,NY NVNL Azure Dragons,BOS Freemasons Red
+21,1,NY IMPACT BOOMING 9,DC CYC A,SF Tien Lung Dragons Dynasty
+21,2,SF Tien Lung Dragons Dynasty,NY Vikings Gold,DC CYC A
+21,3,NY IMPACT BOOMING 9,PHL CIA Red,NY Vikings Gold
+21,4,DC CYC A,SF Tien Lung Dragons Dynasty,NY IMPACT BOOMING 9
+21,5,NY Vikings Gold,PHL CIA Red,SF Tien Lung Dragons Dynasty
+21,6,NY IMPACT BOOMING 9,SF Tien Lung Dragons Dynasty,PHL CIA Red
+21,7,DC CYC A,NY Vikings Gold,NY IMPACT BOOMING 9
+21,8,SF Tien Lung Dragons Dynasty,PHL CIA Red,DC CYC A
+21,9,NY IMPACT BOOMING 9,NY Vikings Gold,PHL CIA Red
+21,10,DC CYC A,PHL CIA Red,NY Vikings Gold

@@ -69,16 +69,16 @@ Court,Game,Team 1,Team 2,Work Team
 15,8,NY Vikings Storm,TOR United Strong,BOS Lady Knights A
 15,9,TOR Westside Gold,NY Horizon Comet,TOR United Strong
 15,10,BOS Lady Knights A,TOR United Strong,NY Horizon Comet
-16,1,NY Vikings Ice,BOS GHOTANE Black,DC On Leong Thunder B
+16,1,PHL Phoenix,BOS GHOTANE Black,DC On Leong Thunder B
 16,2,DC On Leong Thunder B,TOR Westside Black,BOS GHOTANE Black
-16,3,NY Vikings Ice,PHL Phoenix,TOR Westside Black
-16,4,BOS GHOTANE Black,DC On Leong Thunder B,NY Vikings Ice
-16,5,TOR Westside Black,PHL Phoenix,DC On Leong Thunder B
-16,6,NY Vikings Ice,DC On Leong Thunder B,PHL Phoenix
-16,7,BOS GHOTANE Black,TOR Westside Black,NY Vikings Ice
-16,8,DC On Leong Thunder B,PHL Phoenix,BOS GHOTANE Black
-16,9,NY Vikings Ice,TOR Westside Black,PHL Phoenix
-16,10,BOS GHOTANE Black,PHL Phoenix,TOR Westside Black
+16,3,PHL Phoenix,NY Vikings Ice,TOR Westside Black
+16,4,BOS GHOTANE Black,DC On Leong Thunder B,PHL Phoenix
+16,5,TOR Westside Black,NY Vikings Ice,DC On Leong Thunder B
+16,6,PHL Phoenix,DC On Leong Thunder B,NY Vikings Ice
+16,7,BOS GHOTANE Black,TOR Westside Black,PHL Phoenix
+16,8,DC On Leong Thunder B,NY Vikings Ice,BOS GHOTANE Black
+16,9,PHL Phoenix,TOR Westside Black,NY Vikings Ice
+16,10,BOS GHOTANE Black,NY Vikings Ice,TOR Westside Black
 18,1,BOS Hurricanes Womens Gold,TOR Legacy Upsurge,NY Horizon Storm
 18,2,NY Horizon Storm,NY Vikings Fire,TOR Legacy Upsurge
 18,3,BOS Hurricanes Womens Gold,MTL Freemason W2,NY Vikings Fire

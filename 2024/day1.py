@@ -32,12 +32,12 @@ SAMPLE_SPREADSHEET_ID = SHEET_NAME
 SAMPLE_RANGE_NAME = WOMENS_TEAMS
 
 SECOND_SHEET_NAME = '1P-4M09hcVYcEdCgRp9THo99jQByRGusPLm7ymNyP5EA'
-SECOND_DAY_POOLS_OUT_RANGE_MENS = [ 'Second Day!B3:F27', # change based on second day pool format
-                                    'Second Day!H3:L22',
-                                    'Second Day!N3:R17']
-SECOND_DAY_POOLS_OUT_RANGE_WOMENS = ['Second Day!T3:X17',
-                                    'Second Day!Z3:AD17',
-                                    'Second Day!AF3:AJ17']
+SECOND_DAY_POOLS_OUT_RANGE_MENS = [ 'Second Day!A3:F27', # change based on second day pool format
+                                    'Second Day!G3:L22',
+                                    'Second Day!M3:R17']
+SECOND_DAY_POOLS_OUT_RANGE_WOMENS = ['Second Day!S3:X17',
+                                    'Second Day!Y3:AD17',
+                                    'Second Day!AE3:AJ17']
 
 SCORES = pd.DataFrame()
 
@@ -46,6 +46,7 @@ def creds():
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
+    # 2024 Note: Expires after one year, delete token and rerun.
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
@@ -133,10 +134,11 @@ def get_brackets(standings, div, num_gold, num_silver, num_bronze):
         court_teams = dupes[dupes['Court'] == court]
         
         # count wins
-        wins = pd.DataFrame(court_teams['Wins'].value_counts())
-        wins['Freq'] = wins['Wins']
-        wins['Wins'] = wins.index
-        wins.reset_index()
+        wins = pd.DataFrame(court_teams['Wins'].value_counts()).reset_index(drop=False)
+        wins.columns = ['Wins','Freq']
+        # wins['Freq'] = wins['Wins']
+        # wins['Wins'] = wins.index
+        # wins.reset_index()
 
         for index, row in wins.iterrows():
             if (row['Freq'] == 2):
@@ -230,6 +232,7 @@ def day1():
 
             ind_1 = data[data['Team Name'] == sheet_in['Team 1 Name'][ind]].index[0]
             ind_2 = data[data['Team Name'] == sheet_in['Team 2 Name'][ind]].index[0]
+            
             data.at[ind_1, 'Overall Pts'] = data.at[ind_1, 'Overall Pts'] + sheet_in.at[ind, 'Total Pt Diff']
             data.at[ind_2, 'Overall Pts'] = data.at[ind_2, 'Overall Pts'] - sheet_in.at[ind, 'Total Pt Diff']
 
@@ -281,6 +284,9 @@ def get_HTH_winner(team_names, div):
     SCORES = SCORES.iloc[:, 5:]
     SCORES.iloc[:, 2:] = pd.DataFrame(SCORES.iloc[:, 2:], dtype=int)
 
+    print(SCORES)
+    print(team_names)
+
     # look for team names in scoresheet
     HTH_game = SCORES.loc[(SCORES['Team 1 Name'].isin(team_names)) & (SCORES['Team 2 Name'].isin(team_names))].reset_index(drop=True)
     print(HTH_game)
@@ -297,7 +303,7 @@ def get_HTH_winner(team_names, div):
 
 def get_day2_pools(standings, div):
 
-    MENS_NUM_GOLD = 20
+    MENS_NUM_GOLD = 25
     MENS_NUM_SILVER = 20
     MENS_NUM_BRONZE = 15
 
@@ -356,5 +362,5 @@ def get_day2_pools(standings, div):
 
 if __name__ == '__main__':
     standings = day1()
-    # mens_gold, mens_silver, mens_bronze = get_day2_pools(standings, "Mens")
+    mens_gold, mens_silver, mens_bronze = get_day2_pools(standings, "Mens")
     # womens_gold, womens_silver, womens_bronze = get_day2_pools(standings, "Womens")
