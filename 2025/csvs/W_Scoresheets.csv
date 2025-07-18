@@ -1,0 +1,91 @@
+Court,Game,Team 1,Team 2,Work Team
+01,1,TOR Connex Women's B,NY Fresh Taimei,DC CYC Black
+01,2,DC CYC Black,PHL Lady Suns A,NY Fresh Taimei
+01,3,TOR Connex Women's B,NY Strangers Solar,PHL Lady Suns A
+01,4,NY Fresh Taimei,DC CYC Black,TOR Connex Women's B
+01,5,PHL Lady Suns A,NY Strangers Solar,DC CYC Black
+01,6,TOR Connex Women's B,DC CYC Black,NY Strangers Solar
+01,7,NY Fresh Taimei,PHL Lady Suns A,TOR Connex Women's B
+01,8,DC CYC Black,NY Strangers Solar,NY Fresh Taimei
+01,9,TOR Connex Women's B,PHL Lady Suns A,NY Strangers Solar
+01,10,NY Fresh Taimei,NY Strangers Solar,PHL Lady Suns A
+02,1,BOS GHOTANE White,NY CASCSA Lady Kirin,PHL CIA Women
+02,2,PHL CIA Women,DC East Coast Fusion,NY CASCSA Lady Kirin
+02,3,BOS GHOTANE White,NY Freemasons B,DC East Coast Fusion
+02,4,NY CASCSA Lady Kirin,PHL CIA Women,BOS GHOTANE White
+02,5,DC East Coast Fusion,NY Freemasons B,PHL CIA Women
+02,6,BOS GHOTANE White,PHL CIA Women,NY Freemasons B
+02,7,NY CASCSA Lady Kirin,DC East Coast Fusion,BOS GHOTANE White
+02,8,PHL CIA Women,NY Freemasons B,NY CASCSA Lady Kirin
+02,9,BOS GHOTANE White,DC East Coast Fusion,NY Freemasons B
+02,10,NY CASCSA Lady Kirin,NY Freemasons B,DC East Coast Fusion
+07,1,HOU Cowgirls,DC Yee Fung Toy Thunder A,NY Impact Dynamic
+07,2,NY Impact Dynamic,TOR Connex Women's A,DC Yee Fung Toy Thunder A
+07,3,HOU Cowgirls,NY Strangers Rice Balls,TOR Connex Women's A
+07,4,DC Yee Fung Toy Thunder A,NY Impact Dynamic,HOU Cowgirls
+07,5,TOR Connex Women's A,NY Strangers Rice Balls,NY Impact Dynamic
+07,6,HOU Cowgirls,NY Impact Dynamic,NY Strangers Rice Balls
+07,7,DC Yee Fung Toy Thunder A,TOR Connex Women's A,HOU Cowgirls
+07,8,NY Impact Dynamic,NY Strangers Rice Balls,DC Yee Fung Toy Thunder A
+07,9,HOU Cowgirls,TOR Connex Women's A,NY Strangers Rice Balls
+07,10,DC Yee Fung Toy Thunder A,NY Strangers Rice Balls,TOR Connex Women's A
+12,1,CHI Dragon’s Gold,DC MVP Bolts,TOR Legacy Horizon
+12,2,TOR Legacy Horizon,NY Strangers Lunar,DC MVP Bolts
+12,3,CHI Dragon’s Gold,BOS Freemasons,NY Strangers Lunar
+12,4,DC MVP Bolts,TOR Legacy Horizon,CHI Dragon’s Gold
+12,5,NY Strangers Lunar,BOS Freemasons,TOR Legacy Horizon
+12,6,CHI Dragon’s Gold,TOR Legacy Horizon,BOS Freemasons
+12,7,DC MVP Bolts,NY Strangers Lunar,CHI Dragon’s Gold
+12,8,TOR Legacy Horizon,BOS Freemasons,DC MVP Bolts
+12,9,CHI Dragon’s Gold,NY Strangers Lunar,BOS Freemasons
+12,10,DC MVP Bolts,BOS Freemasons,NY Strangers Lunar
+13,1,BOS Lady Knights B,DC MVP Sky,SF Tien Lung Dragons Lady Dynasty
+13,2,SF Tien Lung Dragons Lady Dynasty,NY Freemason A,DC MVP Sky
+13,3,BOS Lady Knights B,TOR Connex Women's C,NY Freemason A
+13,4,DC MVP Sky,SF Tien Lung Dragons Lady Dynasty,BOS Lady Knights B
+13,5,NY Freemason A,TOR Connex Women's C,SF Tien Lung Dragons Lady Dynasty
+13,6,BOS Lady Knights B,SF Tien Lung Dragons Lady Dynasty,TOR Connex Women's C
+13,7,DC MVP Sky,NY Freemason A,BOS Lady Knights B
+13,8,SF Tien Lung Dragons Lady Dynasty,TOR Connex Women's C,DC MVP Sky
+13,9,BOS Lady Knights B,NY Freemason A,TOR Connex Women's C
+13,10,DC MVP Sky,TOR Connex Women's C,NY Freemason A
+14,1,MTL Freemason W1,NY Voltage,BOS Hurricanes Womens Orange
+14,2,BOS Hurricanes Womens Orange,TOR Storm Z,NY Voltage
+14,3,MTL Freemason W1,NY Impact Booming,TOR Storm Z
+14,4,NY Voltage,BOS Hurricanes Womens Orange,MTL Freemason W1
+14,5,TOR Storm Z,NY Impact Booming,BOS Hurricanes Womens Orange
+14,6,MTL Freemason W1,BOS Hurricanes Womens Orange,NY Impact Booming
+14,7,NY Voltage,TOR Storm Z,MTL Freemason W1
+14,8,BOS Hurricanes Womens Orange,NY Impact Booming,NY Voltage
+14,9,MTL Freemason W1,TOR Storm Z,NY Impact Booming
+14,10,NY Voltage,NY Impact Booming,TOR Storm Z
+15,1,TOR Westside Gold,BOS Lady Knights A,NY Vikings Storm
+15,2,NY Vikings Storm,NY Horizon Comet,BOS Lady Knights A
+15,3,TOR Westside Gold,TOR United Strong,NY Horizon Comet
+15,4,BOS Lady Knights A,NY Vikings Storm,TOR Westside Gold
+15,5,NY Horizon Comet,TOR United Strong,NY Vikings Storm
+15,6,TOR Westside Gold,NY Vikings Storm,TOR United Strong
+15,7,BOS Lady Knights A,NY Horizon Comet,TOR Westside Gold
+15,8,NY Vikings Storm,TOR United Strong,BOS Lady Knights A
+15,9,TOR Westside Gold,NY Horizon Comet,TOR United Strong
+15,10,BOS Lady Knights A,TOR United Strong,NY Horizon Comet
+16,1,PHL Phoenix,BOS GHOTANE Black,DC On Leong Thunder B
+16,2,DC On Leong Thunder B,TOR Westside Black,BOS GHOTANE Black
+16,3,PHL Phoenix,NY Vikings Ice,TOR Westside Black
+16,4,BOS GHOTANE Black,DC On Leong Thunder B,PHL Phoenix
+16,5,TOR Westside Black,NY Vikings Ice,DC On Leong Thunder B
+16,6,PHL Phoenix,DC On Leong Thunder B,NY Vikings Ice
+16,7,BOS GHOTANE Black,TOR Westside Black,PHL Phoenix
+16,8,DC On Leong Thunder B,NY Vikings Ice,BOS GHOTANE Black
+16,9,PHL Phoenix,TOR Westside Black,NY Vikings Ice
+16,10,BOS GHOTANE Black,NY Vikings Ice,TOR Westside Black
+18,1,BOS Hurricanes Womens Gold,TOR Legacy Upsurge,NY Horizon Storm
+18,2,NY Horizon Storm,NY Vikings Fire,TOR Legacy Upsurge
+18,3,BOS Hurricanes Womens Gold,MTL Freemason W2,NY Vikings Fire
+18,4,TOR Legacy Upsurge,NY Horizon Storm,BOS Hurricanes Womens Gold
+18,5,NY Vikings Fire,MTL Freemason W2,NY Horizon Storm
+18,6,BOS Hurricanes Womens Gold,NY Horizon Storm,MTL Freemason W2
+18,7,TOR Legacy Upsurge,NY Vikings Fire,BOS Hurricanes Womens Gold
+18,8,NY Horizon Storm,MTL Freemason W2,TOR Legacy Upsurge
+18,9,BOS Hurricanes Womens Gold,NY Vikings Fire,MTL Freemason W2
+18,10,TOR Legacy Upsurge,MTL Freemason W2,NY Vikings Fire
