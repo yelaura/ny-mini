@@ -317,8 +317,8 @@ def get_playoffs(standings, div, bracket):
     data_ranked = pd.DataFrame(columns=values.columns)
 
     for i in range(5):
-        to_add = values.groupby('Court').nth(i).sort_values(by=['Wins', 'HTH', 'Overall Pts'],
-                                                                    ascending=[False, False, False])
+        to_add = values.groupby('Court').nth(i).sort_values(by=['Wins', 'Overall Pts'],
+                                                                    ascending=[False, False])
         
         # data_ranked = data_ranked.append(to_add.reset_index())
         data_ranked=pd.concat([data_ranked, to_add.reset_index()], axis=0, ignore_index=True )
