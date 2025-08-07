@@ -36,7 +36,7 @@ def load_data():
         'If No, Please Provide Perce...': 'Percent Chinese'
     }, inplace=True)
 
-    st.write(df.columns.tolist())
+    st.write(df.head())
 
     # Derive Ethnicity column
     def determine_ethnicity(row):
