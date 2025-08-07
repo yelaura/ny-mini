@@ -18,8 +18,8 @@ def load_data():
     gc = gspread.authorize(creds)
 
     # worksheet = gc.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
-    worksheet = gc.open_by_key(SHEET_NAME)
-    worksheet = sh.worksheet(WORKSHEET_NAME)
+    sheet = gc.open_by_key(SHEET_NAME)
+    worksheet = sheet.worksheet(WORKSHEET_NAME)
     try:
         data = worksheet.get_all_records()
         st.write(data)  # Debug: See what’s coming back
