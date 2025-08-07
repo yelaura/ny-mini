@@ -43,10 +43,13 @@ def load_data():
         'Jersey Number': 'Jersey #',
         'Registration Name': 'Team',
         'Are You 100% Chinese?': '100% Chinese?',
-        'If No, Please Provide Perce...': 'Percent Chinese'
+        'If No, Please Provide Perce...': 'Percent Chinese',
+        'Category Type Name': 'Division'
     }, inplace=True)
 
     df["Is 50% Chinese?"] = df["Percent Chinese"].apply(check_ethnicity)
+    df.loc[df["Division"] == "Men's Division Registration", "Division"] = "Men's"
+    df.loc[df["Division"] == "Women's Division Registration", "Division"] = "Women's"
 
     # Derive Ethnicity column
     def determine_ethnicity(row):
@@ -64,23 +67,23 @@ def load_data():
             return ""
 
     df['Ethnicity'] = df.apply(determine_ethnicity, axis=1)
-    return df[['Team', 'Player Name', 'Jersey #', 'Ethnicity']]
+    return df[['Division', 'Team', 'Player Name', 'Jersey #', 'Ethnicity']]
 
 def main():
     st.title("🏐 NY Nationals: View Rosters by Team")
 
     df = load_data()
     # Select division first
-    division = st.selectbox("Select Division", options=df["Category Type Name"].unique())
+    division = st.selectbox("Select Division", options=df["Division"].unique())
 
     # Filter df by division
-    df_division = df[df["Category Type Name"] == division]
+    df_division = df[df["Division"] == division]
 
     # Then select team within that division
-    team = st.selectbox("Select Team", options=sorted(df_division["Registration Name"].unique()))
+    team = st.selectbox("Select Team", options=sorted(df_division["Team"].unique()))
 
     # Filter roster for selected team
-    team_roster = df_division[df_division["Registration Name"] == team][
+    team_roster = df_division[df_division["Team"] == team][
         ["Name", "Jersey Number", "Ethnicity"]
     ]
 
