@@ -17,7 +17,8 @@ def load_data():
     )
     gc = gspread.authorize(creds)
 
-    worksheet = gc.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
+    # worksheet = gc.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
+    worksheet = gc.open_by_key(SHEET_NAME)
     data = worksheet.get_all_records()
     df = pd.DataFrame(data)
 
