@@ -44,7 +44,7 @@ def load_data():
         'If No, Please Provide Perce...': 'Percent Chinese'
     }, inplace=True)
 
-    df["Is 50% Chinese?"] = df["Ethnicity Info"].apply(check_ethnicity)
+    df["Is 50% Chinese?"] = df["Percent Chinese"].apply(check_ethnicity)
 
     # Derive Ethnicity column
     def determine_ethnicity(row):
