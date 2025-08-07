@@ -48,18 +48,18 @@ def load_data():
 
     # Derive Ethnicity column
     def determine_ethnicity(row):
-    full_chinese = str(row["Are you 100% Chinese?"]).strip().lower()
-    half_chinese = str(row["Is 50% Chinese?"]).strip().lower()
-    other_info = str(row["If No, Please Provide Perce..."]).strip()
+        full_chinese = str(row["Are you 100% Chinese?"]).strip().lower()
+        half_chinese = str(row["Is 50% Chinese?"]).strip().lower()
+        other_info = str(row["If No, Please Provide Perce..."]).strip()
 
-    if full_chinese == "yes":
-        return "C"
-    elif half_chinese == "yes":
-        return "Y"
-    elif other_info != "":
-        return "P"
-    else:
-        return ""
+        if full_chinese == "yes":
+            return "C"
+        elif half_chinese == "yes":
+            return "Y"
+        elif other_info != "":
+            return "P"
+        else:
+            return ""
 
     df['Ethnicity'] = df.apply(determine_ethnicity, axis=1)
     return df[['Team', 'Player Name', 'Jersey #', 'Ethnicity']]
