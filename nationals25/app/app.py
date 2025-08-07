@@ -71,6 +71,10 @@ def load_data():
     return df[['Division', 'Team', 'Player Name', 'Jersey #', 'Ethnicity']]
 
 def main():
+    if st.button("Refresh Data"):
+        # Clear the cache so next load_data call fetches fresh data
+        load_data.clear()
+
     st.title("🏐 NY Nationals 2025")
     
     df = load_data()
