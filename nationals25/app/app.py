@@ -35,6 +35,8 @@ def load_data():
     # Standardize column names
     df.columns = df.columns.str.strip()
 
+    ## TODO: differentiate between mens and womens
+
     # Rename for convenience
     df.rename(columns={
         'Name': 'Player Name',
@@ -68,13 +70,22 @@ def main():
     st.title("🏐 NY Nationals: View Rosters by Team")
 
     df = load_data()
-    teams = sorted(df['Team'].dropna().unique())
-    selected_team = st.selectbox("Select a team:", teams)
+    # Select division first
+    division = st.selectbox("Select Division", options=df["Category Type Name"].unique())
 
-    if selected_team:
-        team_df = df[df['Team'] == selected_team][['Player Name', 'Jersey #', 'Ethnicity']].reset_index(drop=True)
-        st.subheader(f"Roster for {selected_team}")
-        st.table(team_df)
+    # Filter df by division
+    df_division = df[df["Category Type Name"] == division]
+
+    # Then select team within that division
+    team = st.selectbox("Select Team", options=sorted(df_division["Registration Name"].unique()))
+
+    # Filter roster for selected team
+    team_roster = df_division[df_division["Registration Name"] == team][
+        ["Name", "Jersey Number", "Ethnicity"]
+    ]
+
+    st.write(f"Roster for {team} ({division}):")
+    st.dataframe(team_roster)
 
 if __name__ == "__main__":
     main()
