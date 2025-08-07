@@ -85,8 +85,8 @@ def main():
 
     # Filter roster for selected team
     team_roster = df_division[df_division["Team"] == team][
-        ["Name", "Jersey Number", "Ethnicity"]
-    ]
+        ["Player Name", "Jersey #", "Ethnicity"]
+    ].reset_index(drop=True)
 
     st.write(f"Roster for {team} ({division}):")
     st.dataframe(team_roster)
