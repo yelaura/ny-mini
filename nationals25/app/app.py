@@ -11,7 +11,7 @@ WORKSHEET_NAME = "Sheet1"
 def check_ethnicity(value):
     if pd.isna(value) or str(value).strip() == "":
         return "No"
-    elif "50% Chinese" in str(value):
+    elif "50% chinese" in str(value).lower():
         return "Yes"
     else:
         return "No"
