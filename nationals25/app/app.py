@@ -48,8 +48,9 @@ def load_data():
     }, inplace=True)
 
     df["Is 50% Chinese?"] = df["Percent Chinese"].apply(check_ethnicity)
-    df.loc[df["Division"] == "Men's Division Registration", "Division"] = "Men's"
-    df.loc[df["Division"] == "Women's Division Registration", "Division"] = "Women's"
+    df["Division"] = df["Division"].apply(
+        lambda x: "Women's" if pd.notna(x) and "women" in x.lower() else "Men's"
+    )
 
     # Derive Ethnicity column
     def determine_ethnicity(row):
