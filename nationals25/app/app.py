@@ -53,7 +53,7 @@ def load_data():
         other_info = str(row["Percent Chinese"]).strip()
 
         if full_chinese == "yes":
-            return "C"
+            return "G"
         elif half_chinese == "yes":
             return "Y"
         elif other_info != "":
