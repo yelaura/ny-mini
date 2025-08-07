@@ -71,7 +71,9 @@ def load_data():
     return df[['Division', 'Team', 'Player Name', 'Jersey #', 'Ethnicity']]
 
 def main():
-    st.title("🏐 NY Nationals: View Rosters by Team")
+    st.title("🏐 NY Nationals 2025")
+    
+    st.header("View Rosters by Team")
 
     df = load_data()
     # Select division first
@@ -88,7 +90,7 @@ def main():
         ["Player Name", "Jersey #", "Ethnicity"]
     ].reset_index(drop=True)
 
-    st.write(f"Roster for {team} ({division}):")
+    st.write(f"Roster for {division} {team}:")
     st.dataframe(team_roster)
 
 if __name__ == "__main__":
