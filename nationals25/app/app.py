@@ -20,13 +20,6 @@ def load_data():
     # worksheet = gc.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
     sheet = gc.open_by_key(SHEET_NAME)
     worksheet = sheet.worksheet(WORKSHEET_NAME)
-    try:
-        data = worksheet.get_all_records()
-        st.write(data)  # Debug: See what’s coming back
-        return pd.DataFrame(data)
-    except Exception as e:
-        st.error(f"Error reading sheet: {e}")
-        return pd.DataFrame()
 
     data = worksheet.get_all_records()
     df = pd.DataFrame(data)
@@ -42,6 +35,8 @@ def load_data():
         'Are you 100% Chinese?': '100% Chinese?',
         'If No, Please Provide Perce...': 'Percent Chinese'
     }, inplace=True)
+
+    st.write(df.columns.tolist())
 
     # Derive Ethnicity column
     def determine_ethnicity(row):
