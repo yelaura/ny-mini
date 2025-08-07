@@ -5,12 +5,12 @@ from google.oauth2.service_account import Credentials
 import json
 
 # ---- CONFIG ----
-SHEET_NAME = "Your Google Sheet Name"  # <-- Change this
+SHEET_NAME = "1MFrHYek18M6W9h1NI7r_dZbMGO_Ki-EjNnvASflelvw"  # <-- Change this
 WORKSHEET_NAME = "Sheet1"
 
 @st.cache_data(ttl=600)
 def load_data():
-    service_account_info = json.loads(st.secrets["GCP_SERVICE_ACCOUNT"])
+    service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
         service_account_info,
         scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
