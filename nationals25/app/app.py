@@ -65,7 +65,7 @@ def load_data():
     return df[['Team', 'Player Name', 'Jersey #', 'Ethnicity']]
 
 def main():
-    st.title("🏐 Volleyball Roster Viewer by Team")
+    st.title("🏐 NY Nationals: View Rosters by Team")
 
     df = load_data()
     teams = sorted(df['Team'].dropna().unique())
