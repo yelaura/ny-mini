@@ -48,9 +48,9 @@ def load_data():
 
     # Derive Ethnicity column
     def determine_ethnicity(row):
-        full_chinese = str(row["Are you 100% Chinese?"]).strip().lower()
+        full_chinese = str(row["100% Chinese?"]).strip().lower()
         half_chinese = str(row["Is 50% Chinese?"]).strip().lower()
-        other_info = str(row["If No, Please Provide Perce..."]).strip()
+        other_info = str(row["Percent Chinese"]).strip()
 
         if full_chinese == "yes":
             return "C"
