@@ -32,7 +32,7 @@ def load_data():
         'Name': 'Player Name',
         'Jersey Number': 'Jersey #',
         'Registration Name': 'Team',
-        'Are you 100% Chinese?': '100% Chinese?',
+        'Are You 100% Chinese?': '100% Chinese?',
         'If No, Please Provide Perce...': 'Percent Chinese'
     }, inplace=True)
 
