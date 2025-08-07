@@ -73,8 +73,6 @@ def load_data():
 def main():
     st.title("🏐 NY Nationals 2025")
     
-    st.header("View Rosters by Team")
-
     df = load_data()
     # Select division first
     division = st.selectbox("Select Division", options=df["Division"].unique())
@@ -84,6 +82,10 @@ def main():
 
     # Then select team within that division
     team = st.selectbox("Select Team", options=sorted(df_division["Team"].unique()))
+
+    st.header("Schedule and Results")
+
+    st.header("Roster")
 
     # Filter roster for selected team
     team_roster = df_division[df_division["Team"] == team][
