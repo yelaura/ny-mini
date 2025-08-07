@@ -8,6 +8,14 @@ import json
 SHEET_NAME = "1MFrHYek18M6W9h1NI7r_dZbMGO_Ki-EjNnvASflelvw"  # <-- Change this
 WORKSHEET_NAME = "Sheet1"
 
+def check_ethnicity(value):
+    if pd.isna(value) or str(value).strip() == "":
+        return "No"
+    elif "50% Chinese" in str(value):
+        return "Yes"
+    else:
+        return "No"
+
 @st.cache_data(ttl=600)
 def load_data():
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
@@ -36,15 +44,22 @@ def load_data():
         'If No, Please Provide Perce...': 'Percent Chinese'
     }, inplace=True)
 
+    df["Is 50% Chinese?"] = df["Ethnicity Info"].apply(check_ethnicity)
+
     # Derive Ethnicity column
     def determine_ethnicity(row):
-        if str(row['100% Chinese?']).strip().lower() == 'yes':
-            return 'C'
-        try:
-            percent = float(str(row['Percent Chinese']).strip().replace('%', ''))
-            return 'Y' if percent >= 50 else 'P'
-        except:
-            return 'P'
+    full_chinese = str(row["Are you 100% Chinese?"]).strip().lower()
+    half_chinese = str(row["Is 50% Chinese?"]).strip().lower()
+    other_info = str(row["If No, Please Provide Perce..."]).strip()
+
+    if full_chinese == "yes":
+        return "C"
+    elif half_chinese == "yes":
+        return "Y"
+    elif other_info != "":
+        return "P"
+    else:
+        return ""
 
     df['Ethnicity'] = df.apply(determine_ethnicity, axis=1)
     return df[['Team', 'Player Name', 'Jersey #', 'Ethnicity']]
@@ -57,7 +72,7 @@ def main():
     selected_team = st.selectbox("Select a team:", teams)
 
     if selected_team:
-        team_df = df[df['Team'] == selected_team][['Player Name', 'Jersey #', 'Ethnicity']].reset_index()
+        team_df = df[df['Team'] == selected_team][['Player Name', 'Jersey #', 'Ethnicity']].reset_index(drop=True)
         st.subheader(f"Roster for {selected_team}")
         st.table(team_df)
 
