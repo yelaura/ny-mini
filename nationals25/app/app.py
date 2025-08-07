@@ -36,8 +36,6 @@ def load_data():
         'If No, Please Provide Perce...': 'Percent Chinese'
     }, inplace=True)
 
-    st.write(df.head())
-
     # Derive Ethnicity column
     def determine_ethnicity(row):
         if str(row['100% Chinese?']).strip().lower() == 'yes':
@@ -59,7 +57,7 @@ def main():
     selected_team = st.selectbox("Select a team:", teams)
 
     if selected_team:
-        team_df = df[df['Team'] == selected_team][['Player Name', 'Jersey #', 'Ethnicity']]
+        team_df = df[df['Team'] == selected_team][['Player Name', 'Jersey #', 'Ethnicity']].reset_index()
         st.subheader(f"Roster for {selected_team}")
         st.table(team_df)
 
