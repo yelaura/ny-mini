@@ -96,7 +96,6 @@ def main():
         ["Player Name", "Jersey #", "Ethnicity"]
     ].reset_index(drop=True)
 
-    st.write(f"Roster for {division} {team}:")
     st.dataframe(team_roster)
 
 if __name__ == "__main__":
