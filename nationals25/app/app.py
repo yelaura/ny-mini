@@ -16,11 +16,14 @@ def load_results(sheet_key):
         scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
     )
     gc = gspread.authorize(creds)
-    """Load a Google Sheet into a pandas DataFrame."""
-    sh = gc.open_by_key(sheet_key)
-    worksheet = sh.sheet1
+
+    # worksheet = gc.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
+    sheet = gc.open_by_key(RESULTS_SHEET_NAME)
+    worksheet = sheet.worksheet(sheet_key)
+
     data = worksheet.get_all_records()
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+    return df
 
 
 # ---- ROSTER CONFIG ----
