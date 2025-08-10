@@ -10,6 +10,12 @@ MEN_SHEET_KEY = "Mens"
 WOMEN_SHEET_KEY = "Womens"
 
 def load_results(sheet_key):
+    service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
+    creds = Credentials.from_service_account_info(
+        service_account_info,
+        scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    )
+    gc = gspread.authorize(creds)
     """Load a Google Sheet into a pandas DataFrame."""
     sh = gc.open_by_key(sheet_key)
     worksheet = sh.sheet1
