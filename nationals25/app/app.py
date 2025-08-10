@@ -97,7 +97,7 @@ def main():
         ["Player Name", "Jersey #", "Ethnicity"]
         ].reset_index(drop=True)
 
-         st.dataframe(team_roster)
+        st.dataframe(team_roster)
 
 if __name__ == "__main__":
     main()
