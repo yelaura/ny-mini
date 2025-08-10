@@ -99,7 +99,7 @@ def main():
 
     with st.expander("📋 View Schedule and Results"):
         # Pick correct sheet
-        if df_division == "Men's":
+        if division == "Men's":
             sheet_key = MEN_SHEET_KEY
         else:
             sheet_key = WOMEN_SHEET_KEY
