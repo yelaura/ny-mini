@@ -106,7 +106,9 @@ def main():
     # Then select team within that division
     team = st.selectbox("Select Team", options=sorted(df_division["Team"].unique()))
 
-    with st.expander("📋 View Schedule and Results"):
+    with st.expander("📋 View Results"):
+
+        st.subheader("Round 1")
         # Pick correct sheet
         if division == "Men's":
             sheet_key = MEN_SHEET_KEY
