@@ -5,9 +5,9 @@ from google.oauth2.service_account import Credentials
 import json
 
 # ---- RESULTS CONFIG ----
-RESULTS_SHEET_NAME = "1MFrHYek18M6W9h1NI7r_dZbMGO_Ki-EjNnvASflelvw"  # <-- Change this
-MEN_SHEET_KEY = "your-mens-sheet-key-here"
-WOMEN_SHEET_KEY = "your-womens-sheet-key-here"
+RESULTS_SHEET_NAME = "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc"  # <-- Change this
+MEN_SHEET_KEY = "Mens"
+WOMEN_SHEET_KEY = "Womens"
 
 def load_results(sheet_key):
     """Load a Google Sheet into a pandas DataFrame."""
