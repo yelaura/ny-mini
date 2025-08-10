@@ -5,11 +5,14 @@ from google.oauth2.service_account import Credentials
 import json
 
 # ---- RESULTS CONFIG ----
-RESULTS_SHEET_NAME = "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc"  # <-- Change this
+RESULTS_SHEET_NAME = ["1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc", 
+                      "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc",
+                      "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc"]    # <-- Change this
 MEN_SHEET_KEY = "Mens"
 WOMEN_SHEET_KEY = "Womens"
 
-def load_results(sheet_key):
+@st.cache_data(ttl=600)
+def load_results(sheet_name, sheet_key):
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
         service_account_info,
@@ -18,12 +21,55 @@ def load_results(sheet_key):
     gc = gspread.authorize(creds)
 
     # worksheet = gc.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
-    sheet = gc.open_by_key(RESULTS_SHEET_NAME)
+    sheet = gc.open_by_key(sheet_name)
     worksheet = sheet.worksheet(sheet_key)
 
     data = worksheet.get_all_records()
     df = pd.DataFrame(data)
     return df
+
+def load_team_results(df, team):
+    if team:
+            # Filter for team
+            team_df = df[(df["Team 1 Name"] == team) | (df["Team 2 Name"] == team)]
+
+            if not team_df.empty:
+
+                # Show results with adjusted scores
+                results = []
+                for _, row in team_df.iterrows():
+                    # Determine score order
+                    if row["Team 1 Name"] == team:
+                        score1 = f"{row['Team 1 Score']}-{row['Team 2 Score']}"
+                        score2 = f"{row['Team 1 Score 2']}-{row['Team 2 Score 2']}"
+                    else:
+                        score1 = f"{row['Team 2 Score']}-{row['Team 1 Score']}"
+                        score2 = f"{row['Team 2 Score 2']}-{row['Team 1 Score 2']}"
+
+                    # Determine winner
+                    team_points = row['Team 1 Score'] + row['Team 1 Score 2'] if row["Team 1 Name"] == team else row['Team 2 Score'] + row['Team 2 Score 2']
+                    opp_points = row['Team 2 Score'] + row['Team 2 Score 2'] if row["Team 1 Name"] == team else row['Team 1 Score'] + row['Team 1 Score 2']
+                    if team_points > opp_points:
+                        winner = team
+                    elif team_points < opp_points:
+                        winner = row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"]
+                    else:
+                        winner = "Tie"
+
+                    results.append({
+                        "Court Number": row["Court Number"],
+                        "Game Number": row["Game Number (1-10)"],
+                        "Opponent": row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"],
+                        "Score 1": score1,
+                        "Score 2": score2,
+                        "Winner": winner
+                    })
+
+                results_df = pd.DataFrame(results)
+                st.dataframe(results_df)
+            
+            else:
+                st.info("No game results available yet.")
 
 
 # ---- ROSTER CONFIG ----
@@ -116,49 +162,25 @@ def main():
             sheet_key = WOMEN_SHEET_KEY
 
         # Load results
-        df = load_results(sheet_key)
+        df = load_results(RESULTS_SHEET_NAME[0], sheet_key)
 
-        if team:
-            # Filter for team
-            team_df = df[(df["Team 1 Name"] == team) | (df["Team 2 Name"] == team)]
+        load_team_results(team)
 
-            if not team_df.empty:
+        st.subheader("Round 2")
 
-                # Show results with adjusted scores
-                results = []
-                for _, row in team_df.iterrows():
-                    # Determine score order
-                    if row["Team 1 Name"] == team:
-                        score1 = f"{row['Team 1 Score']}-{row['Team 2 Score']}"
-                        score2 = f"{row['Team 1 Score 2']}-{row['Team 2 Score 2']}"
-                    else:
-                        score1 = f"{row['Team 2 Score']}-{row['Team 1 Score']}"
-                        score2 = f"{row['Team 2 Score 2']}-{row['Team 1 Score 2']}"
+        # Load results
+        df = load_results(RESULTS_SHEET_NAME[1], sheet_key)
 
-                    # Determine winner
-                    team_points = row['Team 1 Score'] + row['Team 1 Score 2'] if row["Team 1 Name"] == team else row['Team 2 Score'] + row['Team 2 Score 2']
-                    opp_points = row['Team 2 Score'] + row['Team 2 Score 2'] if row["Team 1 Name"] == team else row['Team 1 Score'] + row['Team 1 Score 2']
-                    if team_points > opp_points:
-                        winner = team
-                    elif team_points < opp_points:
-                        winner = row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"]
-                    else:
-                        winner = "Tie"
+        load_team_results(team)
 
-                    results.append({
-                        "Court Number": row["Court Number"],
-                        "Game Number": row["Game Number (1-10)"],
-                        "Opponent": row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"],
-                        "Score 1": score1,
-                        "Score 2": score2,
-                        "Winner": winner
-                    })
+        st.subheader("Round 3")
 
-                results_df = pd.DataFrame(results)
-                st.dataframe(results_df)
-            
-            else:
-                st.info("No game results available yet.")
+        # Load results
+        df = load_results(RESULTS_SHEET_NAME[2], sheet_key)
+
+        load_team_results(df, team)
+
+        
 
     with st.expander("📋 View Roster"):
         # Filter roster for selected team
