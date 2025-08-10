@@ -120,38 +120,43 @@ def main():
             # Filter for team
             team_df = df[(df["Team 1 Name"] == team) | (df["Team 2 Name"] == team)]
 
-            # Show results with adjusted scores
-            results = []
-            for _, row in team_df.iterrows():
-                # Determine score order
-                if row["Team 1 Name"] == team:
-                    score1 = f"{row['Team 1 Score']}-{row['Team 2 Score']}"
-                    score2 = f"{row['Team 1 Score 2']}-{row['Team 2 Score 2']}"
-                else:
-                    score1 = f"{row['Team 2 Score']}-{row['Team 1 Score']}"
-                    score2 = f"{row['Team 2 Score 2']}-{row['Team 1 Score 2']}"
+            if not team_df.empty:
 
-                # Determine winner
-                team_points = row['Team 1 Score'] + row['Team 1 Score 2'] if row["Team 1 Name"] == team else row['Team 2 Score'] + row['Team 2 Score 2']
-                opp_points = row['Team 2 Score'] + row['Team 2 Score 2'] if row["Team 1 Name"] == team else row['Team 1 Score'] + row['Team 1 Score 2']
-                if team_points > opp_points:
-                    winner = team
-                elif team_points < opp_points:
-                    winner = row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"]
-                else:
-                    winner = "Tie"
+                # Show results with adjusted scores
+                results = []
+                for _, row in team_df.iterrows():
+                    # Determine score order
+                    if row["Team 1 Name"] == team:
+                        score1 = f"{row['Team 1 Score']}-{row['Team 2 Score']}"
+                        score2 = f"{row['Team 1 Score 2']}-{row['Team 2 Score 2']}"
+                    else:
+                        score1 = f"{row['Team 2 Score']}-{row['Team 1 Score']}"
+                        score2 = f"{row['Team 2 Score 2']}-{row['Team 1 Score 2']}"
 
-                results.append({
-                    "Court Number": row["Court Number"],
-                    "Game Number": row["Game Number (1-10)"],
-                    "Opponent": row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"],
-                    "Score 1": score1,
-                    "Score 2": score2,
-                    "Winner": winner
-                })
+                    # Determine winner
+                    team_points = row['Team 1 Score'] + row['Team 1 Score 2'] if row["Team 1 Name"] == team else row['Team 2 Score'] + row['Team 2 Score 2']
+                    opp_points = row['Team 2 Score'] + row['Team 2 Score 2'] if row["Team 1 Name"] == team else row['Team 1 Score'] + row['Team 1 Score 2']
+                    if team_points > opp_points:
+                        winner = team
+                    elif team_points < opp_points:
+                        winner = row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"]
+                    else:
+                        winner = "Tie"
 
-            results_df = pd.DataFrame(results)
-            st.dataframe(results_df)
+                    results.append({
+                        "Court Number": row["Court Number"],
+                        "Game Number": row["Game Number (1-10)"],
+                        "Opponent": row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"],
+                        "Score 1": score1,
+                        "Score 2": score2,
+                        "Winner": winner
+                    })
+
+                results_df = pd.DataFrame(results)
+                st.dataframe(results_df)
+            
+            else:
+                st.info("No game results available yet.")
 
     with st.expander("📋 View Roster"):
         # Filter roster for selected team
