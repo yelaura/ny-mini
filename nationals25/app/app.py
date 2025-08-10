@@ -4,7 +4,20 @@ import gspread
 from google.oauth2.service_account import Credentials
 import json
 
-# ---- CONFIG ----
+# ---- RESULTS CONFIG ----
+RESULTS_SHEET_NAME = "1MFrHYek18M6W9h1NI7r_dZbMGO_Ki-EjNnvASflelvw"  # <-- Change this
+MEN_SHEET_KEY = "your-mens-sheet-key-here"
+WOMEN_SHEET_KEY = "your-womens-sheet-key-here"
+
+def load_results(sheet_key):
+    """Load a Google Sheet into a pandas DataFrame."""
+    sh = gc.open_by_key(sheet_key)
+    worksheet = sh.sheet1
+    data = worksheet.get_all_records()
+    return pd.DataFrame(data)
+
+
+# ---- ROSTER CONFIG ----
 SHEET_NAME = "1MFrHYek18M6W9h1NI7r_dZbMGO_Ki-EjNnvASflelvw"  # <-- Change this
 WORKSHEET_NAME = "Sheet1"
 
@@ -84,7 +97,52 @@ def main():
     # Then select team within that division
     team = st.selectbox("Select Team", options=sorted(df_division["Team"].unique()))
 
-    st.header("Schedule and Results")
+    with st.expander("📋 View Schedule and Results"):
+        # Pick correct sheet
+        if division_choice == "Men's":
+            sheet_key = MEN_SHEET_KEY
+        else:
+            sheet_key = WOMEN_SHEET_KEY
+
+        # Load results
+        df = load_results(sheet_key)
+
+        if team_choice:
+            # Filter for team
+            team_df = df[(df["Team 1 Name"] == team_choice) | (df["Team 2 Name"] == team_choice)]
+
+            # Show results with adjusted scores
+            results = []
+            for _, row in team_df.iterrows():
+                # Determine score order
+                if row["Team 1 Name"] == team_choice:
+                    score1 = f"{row['Team 1 Score']}-{row['Team 2 Score']}"
+                    score2 = f"{row['Team 1 Score 2']}-{row['Team 2 Score 2']}"
+                else:
+                    score1 = f"{row['Team 2 Score']}-{row['Team 1 Score']}"
+                    score2 = f"{row['Team 2 Score 2']}-{row['Team 1 Score 2']}"
+
+                # Determine winner
+                team_points = row['Team 1 Score'] + row['Team 1 Score 2'] if row["Team 1 Name"] == team_choice else row['Team 2 Score'] + row['Team 2 Score 2']
+                opp_points = row['Team 2 Score'] + row['Team 2 Score 2'] if row["Team 1 Name"] == team_choice else row['Team 1 Score'] + row['Team 1 Score 2']
+                if team_points > opp_points:
+                    winner = team_choice
+                elif team_points < opp_points:
+                    winner = row["Team 1 Name"] if row["Team 1 Name"] != team_choice else row["Team 2 Name"]
+                else:
+                    winner = "Tie"
+
+                results.append({
+                    "Court Number": row["Court Number"],
+                    "Game Number": row["Game Number (1-10)"],
+                    "Opponent": row["Team 1 Name"] if row["Team 1 Name"] != team_choice else row["Team 2 Name"],
+                    "Score 1": score1,
+                    "Score 2": score2,
+                    "Winner": winner
+                })
+
+            results_df = pd.DataFrame(results)
+            st.dataframe(results_df)
 
     with st.expander("📋 View Roster"):
         # Filter roster for selected team
