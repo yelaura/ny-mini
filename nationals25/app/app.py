@@ -99,7 +99,7 @@ def main():
 
     with st.expander("📋 View Schedule and Results"):
         # Pick correct sheet
-        if division_choice == "Men's":
+        if df_division == "Men's":
             sheet_key = MEN_SHEET_KEY
         else:
             sheet_key = WOMEN_SHEET_KEY
@@ -107,15 +107,15 @@ def main():
         # Load results
         df = load_results(sheet_key)
 
-        if team_choice:
+        if team:
             # Filter for team
-            team_df = df[(df["Team 1 Name"] == team_choice) | (df["Team 2 Name"] == team_choice)]
+            team_df = df[(df["Team 1 Name"] == team) | (df["Team 2 Name"] == team)]
 
             # Show results with adjusted scores
             results = []
             for _, row in team_df.iterrows():
                 # Determine score order
-                if row["Team 1 Name"] == team_choice:
+                if row["Team 1 Name"] == team:
                     score1 = f"{row['Team 1 Score']}-{row['Team 2 Score']}"
                     score2 = f"{row['Team 1 Score 2']}-{row['Team 2 Score 2']}"
                 else:
@@ -123,19 +123,19 @@ def main():
                     score2 = f"{row['Team 2 Score 2']}-{row['Team 1 Score 2']}"
 
                 # Determine winner
-                team_points = row['Team 1 Score'] + row['Team 1 Score 2'] if row["Team 1 Name"] == team_choice else row['Team 2 Score'] + row['Team 2 Score 2']
-                opp_points = row['Team 2 Score'] + row['Team 2 Score 2'] if row["Team 1 Name"] == team_choice else row['Team 1 Score'] + row['Team 1 Score 2']
+                team_points = row['Team 1 Score'] + row['Team 1 Score 2'] if row["Team 1 Name"] == team else row['Team 2 Score'] + row['Team 2 Score 2']
+                opp_points = row['Team 2 Score'] + row['Team 2 Score 2'] if row["Team 1 Name"] == team else row['Team 1 Score'] + row['Team 1 Score 2']
                 if team_points > opp_points:
-                    winner = team_choice
+                    winner = team
                 elif team_points < opp_points:
-                    winner = row["Team 1 Name"] if row["Team 1 Name"] != team_choice else row["Team 2 Name"]
+                    winner = row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"]
                 else:
                     winner = "Tie"
 
                 results.append({
                     "Court Number": row["Court Number"],
                     "Game Number": row["Game Number (1-10)"],
-                    "Opponent": row["Team 1 Name"] if row["Team 1 Name"] != team_choice else row["Team 2 Name"],
+                    "Opponent": row["Team 1 Name"] if row["Team 1 Name"] != team else row["Team 2 Name"],
                     "Score 1": score1,
                     "Score 2": score2,
                     "Winner": winner
