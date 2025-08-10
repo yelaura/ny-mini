@@ -16,8 +16,8 @@ def check_ethnicity(value):
     else:
         return "No"
 
-@st.cache_data(ttl=600)
-def load_data():
+@st.cache_data(ttl=1440)
+def load_roster():
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
         service_account_info,
@@ -89,14 +89,15 @@ def main():
 
     st.header("Schedule and Results")
 
-    st.header("Roster")
+    with st.expander("📋 View Roster"):
+        roster_df = load_roster()
 
-    # Filter roster for selected team
-    team_roster = df_division[df_division["Team"] == team][
+        # Filter roster for selected team
+        team_roster = df_division[df_division["Team"] == team][
         ["Player Name", "Jersey #", "Ethnicity"]
-    ].reset_index(drop=True)
+        ].reset_index(drop=True)
 
-    st.dataframe(team_roster)
+         st.dataframe(team_roster)
 
 if __name__ == "__main__":
     main()
