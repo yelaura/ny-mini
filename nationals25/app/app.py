@@ -164,14 +164,14 @@ def main():
         # Load results
         df = load_results(RESULTS_SHEET_NAME[0], sheet_key)
 
-        load_team_results(team)
+        load_team_results(df, team)
 
         st.subheader("Round 2")
 
         # Load results
         df = load_results(RESULTS_SHEET_NAME[1], sheet_key)
 
-        load_team_results(team)
+        load_team_results(df, team)
 
         st.subheader("Round 3")
 
