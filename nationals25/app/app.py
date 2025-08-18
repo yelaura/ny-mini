@@ -11,7 +11,7 @@ RESULTS_SHEET_NAME = ["1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc",
 MEN_SHEET_KEY = "Mens"
 WOMEN_SHEET_KEY = "Womens"
 
-@st.cache_data(ttl=600)
+@st.cache_data(ttl=900)
 def load_results(sheet_name, sheet_key):
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
