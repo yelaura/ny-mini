@@ -109,6 +109,9 @@ def main():
         womens_out.update([womens_rankings.columns.values.tolist()] + womens_rankings.values.tolist())
         print(f"✅ Day {args.day} Women's standings updated in tab '{tab_name}'")
 
+    if args.day == 2:
+        print("⚠️ Check for ties across playoff brackets")
+
 
 if __name__ == "__main__":
     main()
