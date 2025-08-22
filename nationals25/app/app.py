@@ -135,8 +135,8 @@ def load_roster():
         else:
             return ""
 
-    df['Ethnicity'] = df.apply(determine_ethnicity, axis=1)
-    return df[['Division', 'Team', 'Player Name', 'Jersey #', 'Ethnicity']]
+    df['Wristband Color'] = df.apply(determine_ethnicity, axis=1)
+    return df[['Division', 'Team', 'Player Name', 'Jersey #', 'Wristband Color']]
 
 def main():
 
@@ -185,7 +185,7 @@ def main():
     with st.expander("📋 View Roster"):
         # Filter roster for selected team
         team_roster = df_division[df_division["Team"] == team][
-        ["Player Name", "Jersey #", "Ethnicity"]
+        ["Player Name", "Jersey #", "Wristband Color"]
         ].reset_index(drop=True)
 
         st.dataframe(team_roster)
