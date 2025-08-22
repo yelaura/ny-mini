@@ -140,7 +140,7 @@ def load_roster():
 
 def main():
 
-    st.title("🏐 NY Nationals 2025")
+    st.title("🏐 The 80th NACIVT in New York City 2025")
     
     df = load_roster()
     # Select division first
