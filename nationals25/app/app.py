@@ -84,7 +84,7 @@ def check_ethnicity(value):
     else:
         return "No"
 
-@st.cache_data(ttl=1440)
+@st.cache_data(ttl=43200)
 def load_roster():
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
@@ -140,7 +140,7 @@ def load_roster():
 
 def main():
 
-    st.title("🏐 The 80th NACIVT in New York City 2025")
+    st.title("🏐 The 80th NACIVT in New York City")
     
     df = load_roster()
     # Select division first
