@@ -85,12 +85,14 @@ def load_roster():
     )
     gc = gspread.authorize(creds)
 
-    # worksheet = gc.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
     sheet = gc.open_by_key(SHEET_NAME)
     worksheet = sheet.worksheet(WORKSHEET_NAME)
 
     data = worksheet.get_all_records()
-    df = pd.DataFrame(data).astype(str)
+    df = pd.DataFrame(data)
+
+    # Force all values to string (Arrow-safe)
+    df = df.fillna("").astype(str)
 
     # Standardize column names
     df.columns = df.columns.str.strip()
@@ -104,6 +106,7 @@ def load_roster():
     }, inplace=True)
 
     df["Division"] = df["Gender"].map({"Male": "Men's", "Female": "Women's"})
+    return df
 
 def main():
 
@@ -119,7 +122,7 @@ def main():
     # Then select team within that division
     team = st.selectbox("Select Team", options=sorted(df_division["Team"].unique()))
 
-    with st.expander("View Schedule"):
+    # with st.expander("View Schedule"):
 
     with st.expander("📋 View Results"):
 
