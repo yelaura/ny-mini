@@ -41,12 +41,12 @@ def compute_status(row, team_name):
         return "Off"
 
 def highlight_status(row):
-    if row["Team Status"] == "Playing":
-        return ['background-color: #006400']*len(row)  # dark green
-    elif row["Team Status"] == "Working":
-        return ['background-color: #FFA500']*len(row)  # orange
+    theme = st.get_option("theme.base")
+    if theme == "dark":
+        colors = {"Playing": "#006400", "Working": "#FFA500", "Off": "#444444"}
     else:
-        return ['background-color: #444444']*len(row)  # dark gray
+        colors = {"Playing": "#90EE90", "Working": "#FFD700", "Off": "#D3D3D3"}
+    return [f'background-color: {colors.get(row["Team Status"], "")}']*len(row)
 
 def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"):
     team_df = df[(df.get(team1_col) == team) | (df.get(team2_col) == team)]
@@ -85,6 +85,7 @@ with tabs[0]:
     schedule_tab = MEN_SHEET_KEY if division_sched == "Men's" else WOMEN_SHEET_KEY
     schedule_df = load_sheet(SCHEDULE_SHEET_ID, schedule_tab)
 
+    # Unique team names for selector
     all_teams_sched = pd.Series(
         schedule_df["Team 1"].tolist() +
         schedule_df["Team 2"].tolist() +
@@ -94,10 +95,18 @@ with tabs[0]:
     team_sched = st.selectbox("Select Team (Schedule)", all_teams_sched, key="sched_team")
 
     if schedule_df is not None and not schedule_df.empty:
-        # Show full court schedule, still compute status for selected team
-        schedule_df["Team Status"] = schedule_df.apply(lambda r: compute_status(r, team_sched), axis=1)
-        team_schedule = schedule_df.copy()
-        team_schedule.sort_values(by=["Court Number", "Game Number"], inplace=True, ignore_index=True)
+        # Find the team’s court
+        team_court = schedule_df[
+            (schedule_df["Team 1"] == team_sched) | 
+            (schedule_df["Team 2"] == team_sched) | 
+            (schedule_df["Work Team"] == team_sched)
+        ]["Court Number"].iloc[0]
+
+        # Filter schedule to that court only
+        team_schedule = schedule_df[schedule_df["Court Number"] == team_court].copy()
+        team_schedule["Team Status"] = team_schedule.apply(lambda r: compute_status(r, team_sched), axis=1)
+        team_schedule.sort_values(by="Game Number", inplace=True, ignore_index=True)
+
         st.dataframe(team_schedule.style.apply(highlight_status, axis=1))
 
 # --- RESULTS TAB ---
