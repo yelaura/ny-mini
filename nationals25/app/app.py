@@ -4,18 +4,16 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # ---- CONFIG ----
-# Schedule sheet
 SCHEDULE_SHEET_ID = "1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8"
+RESULTS_SHEET_ID = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
+ROSTER_SHEET_ID = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"
+
 MEN_SHEET_KEY = "M_Scoresheets"
 WOMEN_SHEET_KEY = "W_Scoresheets"
 
-# Results sheet (single sheet for all rounds)
-RESULTS_SHEET_ID = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
 MEN_RESULTS_KEY = "Mens"
 WOMEN_RESULTS_KEY = "Womens"
 
-# Roster sheet
-ROSTER_SHEET_ID = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"
 ROSTER_WORKSHEET_NAME = "NYC"
 
 # ---- STREAMLIT CACHING FUNCTIONS ----
@@ -30,9 +28,7 @@ def load_sheet(sheet_id, worksheet_name):
     ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
     data = ws.get_all_records()
     df = pd.DataFrame(data)
-    
-    # Strip whitespace from column names
-    df.columns = df.columns.str.strip()
+    df.columns = df.columns.str.strip()  # strip whitespace
     return df
 
 # ---- HELPER FUNCTIONS ----
@@ -46,11 +42,11 @@ def compute_status(row, team_name):
 
 def highlight_status(row):
     if row["Team Status"] == "Playing":
-        return ['background-color: lightgreen']*len(row)
+        return ['background-color: #006400']*len(row)  # dark green
     elif row["Team Status"] == "Working":
-        return ['background-color: lightyellow']*len(row)
+        return ['background-color: #FFA500']*len(row)  # orange
     else:
-        return ['background-color: lightgray']*len(row)
+        return ['background-color: #444444']*len(row)  # dark gray
 
 def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"):
     team_df = df[(df.get(team1_col) == team) | (df.get(team2_col) == team)]
@@ -78,7 +74,7 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
     return pd.DataFrame(results)
 
 # ---- MAIN APP ----
-st.title("🏐 The 80th NACIVT in NYC")  # Fixed title
+st.title("🏐 The 80th NACIVT in NYC")  # fixed title
 
 tabs = st.tabs(["Schedule", "Results", "Roster"])
 
@@ -89,19 +85,18 @@ with tabs[0]:
     schedule_tab = MEN_SHEET_KEY if division_sched == "Men's" else WOMEN_SHEET_KEY
     schedule_df = load_sheet(SCHEDULE_SHEET_ID, schedule_tab)
 
-    # Ensure unique team names for selectbox
     all_teams_sched = pd.Series(
         schedule_df["Team 1"].tolist() +
         schedule_df["Team 2"].tolist() +
         schedule_df["Work Team"].tolist()
     ).dropna().astype(str).str.strip()
     all_teams_sched = sorted(all_teams_sched[all_teams_sched != ""].unique())
-
     team_sched = st.selectbox("Select Team (Schedule)", all_teams_sched, key="sched_team")
 
-    if schedule_df is not None and not schedule_df.empty and team_sched:
+    if schedule_df is not None and not schedule_df.empty:
+        # Show full court schedule, still compute status for selected team
         schedule_df["Team Status"] = schedule_df.apply(lambda r: compute_status(r, team_sched), axis=1)
-        team_schedule = schedule_df[schedule_df["Team Status"] != "Off"]
+        team_schedule = schedule_df.copy()
         team_schedule.sort_values(by=["Court Number", "Game Number"], inplace=True, ignore_index=True)
         st.dataframe(team_schedule.style.apply(highlight_status, axis=1))
 
@@ -113,7 +108,6 @@ with tabs[1]:
     
     df_results = load_sheet(RESULTS_SHEET_ID, sheet_key_res)
     
-    # Ensure unique team names for selectbox
     all_teams_res = pd.Series(
         df_results["Team 1 Name"].tolist() +
         df_results["Team 2 Name"].tolist()
@@ -122,7 +116,6 @@ with tabs[1]:
 
     team_res = st.selectbox("Select Team (Results)", all_teams_res, key="res_team")
     
-    # Define rounds by Timestamp
     ROUND_DATES = {
         "Round 1": "2025-08-30",
         "Round 2": "2025-08-31",
@@ -143,7 +136,7 @@ with tabs[2]:
     division_roster = st.selectbox("Select Division (Roster)", ["Men's", "Women's"], key="roster_div")
     roster_df = load_sheet(ROSTER_SHEET_ID, ROSTER_WORKSHEET_NAME)
 
-    # Strip columns and rename consistently
+    # Rename columns consistently
     roster_df.rename(columns={
         'Name': 'Player Name',
         'Jersey Number': 'Jersey #',
