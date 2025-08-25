@@ -119,6 +119,8 @@ def main():
     # Then select team within that division
     team = st.selectbox("Select Team", options=sorted(df_division["Team"].unique()))
 
+    with st.expander("View Schedule"):
+
     with st.expander("📋 View Results"):
 
         st.subheader("Round 1")
