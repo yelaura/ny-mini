@@ -117,6 +117,10 @@ with tabs[1]:
     
     df_results = load_sheet(RESULTS_SHEET_ID, sheet_key_res)
     
+    # Convert Timestamp to datetime
+    df_results["Timestamp"] = pd.to_datetime(df_results["Timestamp"], errors='coerce')
+
+    # Get unique team names for selector
     all_teams_res = pd.Series(
         df_results["Team 1 Name"].tolist() +
         df_results["Team 2 Name"].tolist()
@@ -125,14 +129,16 @@ with tabs[1]:
 
     team_res = st.selectbox("Select Team (Results)", all_teams_res, key="res_team")
     
+    # Define round dates
     ROUND_DATES = {
-        "Round 1": "2025-08-30",
-        "Round 2": "2025-08-31",
+        "Round 1": pd.to_datetime("2025-08-30").date(),
+        "Round 2": pd.to_datetime("2025-08-31").date(),
     }
     
     for round_name, round_date in ROUND_DATES.items():
         st.subheader(round_name)
-        round_df = df_results[df_results["Timestamp"].str.contains(round_date)]
+        # Filter by date only
+        round_df = df_results[df_results["Timestamp"].dt.date == round_date]
         df_team_results = load_team_results(round_df, team_res)
         if not df_team_results.empty:
             st.dataframe(df_team_results)
