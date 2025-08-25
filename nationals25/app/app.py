@@ -2,182 +2,183 @@ import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
+from datetime import datetime, timedelta
 
-# ---- CONFIG ----
+# ---- SHEET IDS ----
 SCHEDULE_SHEET_ID = "1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8"
-RESULTS_SHEET_ID = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
-ROSTER_SHEET_ID = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"
+RESULTS_SHEET_ID  = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
+ROSTER_SHEET_ID   = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"
 
-MEN_SHEET_KEY = "M_Scoresheets"
-WOMEN_SHEET_KEY = "W_Scoresheets"
+MEN_SHEET_KEY     = "Mens"
+WOMEN_SHEET_KEY   = "Womens"
 
-MEN_RESULTS_KEY = "Mens"
-WOMEN_RESULTS_KEY = "Womens"
+# ---- SCHEDULE CONFIG ----
+START_TIME = datetime.strptime("07:30", "%H:%M")
+GAME_DURATION = timedelta(hours=1)
 
-ROSTER_WORKSHEET_NAME = "NYC"
-
-# ---- STREAMLIT CACHING FUNCTIONS ----
-@st.cache_data(ttl=6*60*60)  # 6 hours
-def load_sheet(sheet_id, worksheet_name):
+# ---- AUTH ----
+def get_client():
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
         service_account_info,
         scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
     )
-    gc = gspread.authorize(creds)
-    ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
-    data = ws.get_all_records()
-    df = pd.DataFrame(data)
+    return gspread.authorize(creds)
+
+# ---- LOAD DATA ----
+@st.cache_data(ttl=21600)  # 6 hours
+def load_roster():
+    gc = get_client()
+    sheet = gc.open_by_key(ROSTER_SHEET_ID)
+    ws = sheet.worksheet("NYC")
+    data = ws.get("A:H")
+    df = pd.DataFrame(data[1:], columns=data[0]).fillna("").astype(str)
     df.columns = df.columns.str.strip()
+    df.rename(columns={
+        'Name': 'Player Name',
+        'Jersey Number': 'Jersey #',
+        'Registration Name': 'Team',
+        'Wristband': 'Wristband Color'
+    }, inplace=True)
     return df
 
-@st.cache_data(ttl=15*60)  # 15 minutes
-def load_results_sheet(sheet_id, worksheet_name):
-    service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
-    creds = Credentials.from_service_account_info(
-        service_account_info,
-        scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
-    )
-    gc = gspread.authorize(creds)
-    ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
-    data = ws.get_all_records()
-    df = pd.DataFrame(data)
-    df.columns = df.columns.str.strip()
-    df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors='coerce')
+@st.cache_data(ttl=21600)  # 6 hours
+def load_schedule(sheet_id, ws_name, court_row, team_start_row, team_end_row):
+    """Return full court schedule"""
+    gc = get_client()
+    sh = gc.open_by_key(sheet_id)
+    ws = sh.worksheet(ws_name)
+
+    courts = ws.row_values(court_row)[2:]
+    from gspread.utils import rowcol_to_a1
+    start_cell = rowcol_to_a1(team_start_row, 3)
+    end_cell = rowcol_to_a1(team_end_row, 2 + len(courts))
+    team_grid = ws.get(f"{start_cell}:{end_cell}")
+
+    court_team_maps = {}
+    for col_idx, court in enumerate(courts):
+        mapping = {}
+        for row_idx, row in enumerate(team_grid):
+            team_name = row[col_idx] if col_idx < len(row) else ""
+            if team_name.strip():
+                mapping[str(row_idx + 1)] = team_name
+        court_team_maps[court] = mapping
+
+    # Get pool schedule
+    pool_ws = sh.worksheet("Pool Schedules")
+    pool_data = pool_ws.get("F5:I14")
+    pool_df = pd.DataFrame(pool_data, columns=["Game", "Team 1", "Team 2", "Work Team"])
+
+    # Expand schedule
+    schedule = []
+    for _, row in pool_df.iterrows():
+        game_num = int(row["Game"])
+        start_time = (START_TIME + (game_num - 1) * GAME_DURATION).strftime("%I:%M %p")
+        for court in courts:
+            team_map = court_team_maps[court]
+            schedule.append({
+                "Start Time": start_time,
+                "Court Number": court,
+                "Game Number": game_num,
+                "Team 1": team_map.get(str(row["Team 1"]), f"Team {row['Team 1']}"),
+                "Team 2": team_map.get(str(row["Team 2"]), f"Team {row['Team 2']}"),
+                "Work Team": team_map.get(str(row["Work Team"]), f"Team {row['Work Team']}")
+            })
+    df = pd.DataFrame(schedule)
+    df.sort_values(by=["Court Number", "Game Number"], inplace=True, ignore_index=True)
     return df
 
-# ---- HELPER FUNCTIONS ----
-def compute_status(row, team_name):
-    if row.get("Team 1") == team_name or row.get("Team 2") == team_name:
+@st.cache_data(ttl=900)  # 15 minutes
+def load_results(sheet_id, ws_name):
+    gc = get_client()
+    sh = gc.open_by_key(sheet_id)
+    ws = sh.worksheet(ws_name)
+    data = ws.get_all_records()
+    return pd.DataFrame(data)
+
+# ---- HELPER ----
+def team_status(row, team):
+    if row["Team 1"] == team or row["Team 2"] == team:
         return "Playing"
-    elif row.get("Work Team") == team_name:
+    elif row["Work Team"] == team:
         return "Working"
     else:
         return "Off"
 
-def highlight_status(row):
-    theme = st.get_option("theme.base")
-    if theme == "dark":
-        colors = {"Playing": "#006400", "Working": "#FFA500", "Off": "#444444"}
-    else:
-        colors = {"Playing": "#90EE90", "Working": "#FFD700", "Off": "#D3D3D3"}
-    return [f'background-color: {colors.get(row["Team Status"], "")}']*len(row)
+# ---- APP ----
+def main():
+    st.title("🏐 The 80th NACIVT in NYC")
 
-def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"):
-    team_df = df[(df.get(team1_col) == team) | (df.get(team2_col) == team)]
-    if team_df.empty:
-        return pd.DataFrame()
-    results = []
-    for _, row in team_df.iterrows():
-        if row[team1_col] == team:
-            score1 = f"{row.get('Team 1 Score', '')}-{row.get('Team 2 Score', '')}"
-            score2 = f"{row.get('Team 1 Score 2', '')}-{row.get('Team 2 Score 2', '')}"
+    roster_df = load_roster()
+
+    tabs = st.tabs(["Schedule", "Results", "Roster"])
+
+    # -------- SCHEDULE TAB --------
+    with tabs[0]:
+        st.header("Schedule")
+        division = st.selectbox("Select Division", options=["Men's", "Women's"])
+        team = st.selectbox(
+            "Select Team", 
+            options=sorted(roster_df[roster_df["Division"]==division]["Team"].unique())
+        )
+
+        # Pick schedule worksheet and ranges
+        if division == "Men's":
+            schedule_df = load_schedule(SCHEDULE_SHEET_ID, "Mens Master", court_row=4, team_start_row=5, team_end_row=9)
         else:
-            score1 = f"{row.get('Team 2 Score', '')}-{row.get('Team 1 Score', '')}"
-            score2 = f"{row.get('Team 2 Score 2', '')}-{row.get('Team 1 Score 2', '')}"
-        team_points = row.get('Team 1 Score', 0) + row.get('Team 1 Score 2', 0) if row[team1_col] == team else row.get('Team 2 Score', 0) + row.get('Team 2 Score 2', 0)
-        opp_points = row.get('Team 2 Score', 0) + row.get('Team 2 Score 2', 0) if row[team1_col] == team else row.get('Team 1 Score', 0) + row.get('Team 1 Score 2', 0)
-        winner = team if team_points > opp_points else row[team1_col] if row[team1_col] != team else row[team2_col] if team_points < opp_points else "Tie"
-        results.append({
-            "Court Number": row.get("Court Number", ""),
-            "Game Number": row.get("Game Number (1-10)", ""),
-            "Opponent": row[team1_col] if row[team1_col] != team else row[team2_col],
-            "Score 1": score1,
-            "Score 2": score2,
-            "Winner": winner
-        })
-    return pd.DataFrame(results)
+            schedule_df = load_schedule(SCHEDULE_SHEET_ID, "Womens Master", court_row=4, team_start_row=5, team_end_row=9)
 
-# ---- MAIN APP ----
-st.title("🏐 The 80th NACIVT in NYC")  # fixed title
+        # Filter for the court the team is on
+        team_court = None
+        for court, group in schedule_df.groupby("Court Number"):
+            if team in group["Team 1"].values or team in group["Team 2"].values:
+                team_court = court
+                break
+        st.subheader(f"Schedule for Court {team_court}")
+        schedule_df_court = schedule_df[schedule_df["Court Number"]==team_court].copy()
+        schedule_df_court["Status"] = schedule_df_court.apply(lambda r: team_status(r, team), axis=1)
+        st.dataframe(schedule_df_court)
 
-tabs = st.tabs(["Schedule", "Results", "Roster"])
+    # -------- RESULTS TAB --------
+    with tabs[1]:
+        st.header("Results")
+        division = st.selectbox("Select Division (Results)", options=["Men's", "Women's"], key="results_div")
+        team = st.selectbox(
+            "Select Team (Results)", 
+            options=sorted(roster_df[roster_df["Division"]==division]["Team"].unique()),
+            key="results_team"
+        )
 
-# --- SCHEDULE TAB ---
-with tabs[0]:
-    st.header("Schedule")
-    division_sched = st.selectbox("Select Division (Schedule)", ["Men's", "Women's"], key="sched_div")
-    schedule_tab = MEN_SHEET_KEY if division_sched == "Men's" else WOMEN_SHEET_KEY
-    schedule_df = load_sheet(SCHEDULE_SHEET_ID, schedule_tab)
+        sheet_key = MEN_SHEET_KEY if division=="Men's" else WOMEN_SHEET_KEY
+        results_df = load_results(RESULTS_SHEET_ID, sheet_key)
 
-    # Unique team names for selector
-    all_teams_sched = pd.Series(
-        schedule_df["Team 1"].tolist() +
-        schedule_df["Team 2"].tolist() +
-        schedule_df["Work Team"].tolist()
-    ).dropna().astype(str).str.strip()
-    all_teams_sched = sorted(all_teams_sched[all_teams_sched != ""].unique())
-    team_sched = st.selectbox("Select Team (Schedule)", all_teams_sched, key="sched_team")
+        # Round 1
+        st.subheader("Round 1")
+        r1_df = results_df[results_df["Timestamp"].str.startswith("8/30/2025")]
+        st.dataframe(r1_df[(r1_df["Team 1 Name"]==team)|(r1_df["Team 2 Name"]==team)])
 
-    if schedule_df is not None and not schedule_df.empty:
-        # Find the team’s court
-        team_court = schedule_df[
-            (schedule_df["Team 1"] == team_sched) | 
-            (schedule_df["Team 2"] == team_sched) | 
-            (schedule_df["Work Team"] == team_sched)
-        ]["Court Number"].iloc[0]
+        # Round 2
+        st.subheader("Round 2")
+        r2_df = results_df[results_df["Timestamp"].str.startswith("8/31/2025")]
+        st.dataframe(r2_df[(r2_df["Team 1 Name"]==team)|(r2_df["Team 2 Name"]==team)])
 
-        # Filter schedule to that court only
-        team_schedule = schedule_df[schedule_df["Court Number"] == team_court].copy()
-        team_schedule["Team Status"] = team_schedule.apply(lambda r: compute_status(r, team_sched), axis=1)
-        team_schedule.sort_values(by="Game Number", inplace=True, ignore_index=True)
+        # Round 3
+        st.subheader("Round 3")
+        st.dataframe(results_df[(results_df["Team 1 Name"]==team)|(results_df["Team 2 Name"]==team)])
 
-        st.dataframe(team_schedule.style.apply(highlight_status, axis=1))
+    # -------- ROSTER TAB --------
+    with tabs[2]:
+        st.header("Roster")
+        division = st.selectbox("Select Division (Roster)", options=["Men's", "Women's"], key="roster_div")
+        team = st.selectbox(
+            "Select Team (Roster)", 
+            options=sorted(roster_df[roster_df["Division"]==division]["Team"].unique()),
+            key="roster_team"
+        )
+        roster_team_df = roster_df[(roster_df["Division"]==division) & (roster_df["Team"]==team)][
+            ["Player Name","Jersey #","Wristband Color"]
+        ].reset_index(drop=True)
+        st.dataframe(roster_team_df)
 
-# --- RESULTS TAB ---
-with tabs[1]:
-    st.header("Results")
-    division_res = st.selectbox("Select Division (Results)", ["Men's", "Women's"], key="res_div")
-    sheet_key_res = MEN_RESULTS_KEY if division_res == "Men's" else WOMEN_RESULTS_KEY
-    
-    df_results = load_results_sheet(RESULTS_SHEET_ID, sheet_key_res)
-    
-    # Get unique team names for selector
-    all_teams_res = pd.Series(
-        df_results["Team 1 Name"].tolist() +
-        df_results["Team 2 Name"].tolist()
-    ).dropna().astype(str).str.strip()
-    all_teams_res = sorted(all_teams_res[all_teams_res != ""].unique())
-
-    team_res = st.selectbox("Select Team (Results)", all_teams_res, key="res_team")
-    
-    # Define round dates
-    ROUND_DATES = {
-        "Round 1": pd.to_datetime("2025-08-30").date(),
-        "Round 2": pd.to_datetime("2025-08-31").date(),
-    }
-    
-    for round_name, round_date in ROUND_DATES.items():
-        st.subheader(round_name)
-        # Filter by date only
-        round_df = df_results[df_results["Timestamp"].dt.date == round_date]
-        df_team_results = load_team_results(round_df, team_res)
-        if not df_team_results.empty:
-            st.dataframe(df_team_results)
-        else:
-            st.info(f"No results for {team_res} on {round_name}")
-
-# --- ROSTER TAB ---
-with tabs[2]:
-    st.header("Roster")
-    division_roster = st.selectbox("Select Division (Roster)", ["Men's", "Women's"], key="roster_div")
-    roster_df = load_sheet(ROSTER_SHEET_ID, ROSTER_WORKSHEET_NAME)
-
-    # Rename columns consistently
-    roster_df.rename(columns={
-        'Name': 'Player Name',
-        'Jersey Number': 'Jersey #',
-        'Wristband': 'Wristband Color',
-        'Registration Name': 'Team',
-        'Gender': 'Gender'
-    }, inplace=True)
-    roster_df["Division"] = roster_df["Gender"].map({"Male": "Men's", "Female": "Women's"})
-    roster_div = roster_df[roster_df["Division"] == division_roster]
-
-    all_teams_roster = sorted(roster_div["Team"].unique())
-    team_roster = st.selectbox("Select Team (Roster)", all_teams_roster, key="roster_team")
-
-    team_roster_df = roster_div[roster_div["Team"] == team_roster][
-        ["Player Name", "Jersey #", "Wristband Color"]
-    ].reset_index(drop=True)
-    st.dataframe(team_roster_df)
+if __name__ == "__main__":
+    main()
