@@ -17,7 +17,7 @@ WOMEN_RESULTS_KEY = "Womens"
 ROSTER_WORKSHEET_NAME = "NYC"
 
 # ---- STREAMLIT CACHING FUNCTIONS ----
-@st.cache_data(ttl=900)
+@st.cache_data(ttl=6*60*60)  # 6 hours
 def load_sheet(sheet_id, worksheet_name):
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
@@ -28,7 +28,22 @@ def load_sheet(sheet_id, worksheet_name):
     ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
     data = ws.get_all_records()
     df = pd.DataFrame(data)
-    df.columns = df.columns.str.strip()  # strip whitespace
+    df.columns = df.columns.str.strip()
+    return df
+
+@st.cache_data(ttl=15*60)  # 15 minutes
+def load_results_sheet(sheet_id, worksheet_name):
+    service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
+    creds = Credentials.from_service_account_info(
+        service_account_info,
+        scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    )
+    gc = gspread.authorize(creds)
+    ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
+    data = ws.get_all_records()
+    df = pd.DataFrame(data)
+    df.columns = df.columns.str.strip()
+    df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors='coerce')
     return df
 
 # ---- HELPER FUNCTIONS ----
@@ -115,11 +130,8 @@ with tabs[1]:
     division_res = st.selectbox("Select Division (Results)", ["Men's", "Women's"], key="res_div")
     sheet_key_res = MEN_RESULTS_KEY if division_res == "Men's" else WOMEN_RESULTS_KEY
     
-    df_results = load_sheet(RESULTS_SHEET_ID, sheet_key_res)
+    df_results = load_results_sheet(RESULTS_SHEET_ID, sheet_key_res)
     
-    # Convert Timestamp to datetime
-    df_results["Timestamp"] = pd.to_datetime(df_results["Timestamp"], errors='coerce')
-
     # Get unique team names for selector
     all_teams_res = pd.Series(
         df_results["Team 1 Name"].tolist() +
