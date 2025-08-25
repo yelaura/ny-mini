@@ -40,6 +40,14 @@ def load_roster():
         'Registration Name': 'Team',
         'Wristband': 'Wristband Color'
     }, inplace=True)
+
+    # Make sure 'Gender' column exists in the sheet!
+    if "Gender" in df.columns:
+        df["Division"] = df["Gender"].map({"Male": "Men's", "Female": "Women's"})
+    else:
+        # fallback: assign based on external knowledge or keep empty
+        df["Division"] = ""
+
     return df
 
 @st.cache_data(ttl=21600)  # 6 hours
