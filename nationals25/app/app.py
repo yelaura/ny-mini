@@ -76,14 +76,6 @@ def load_team_results(df, team):
 SHEET_NAME = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"  # <-- Change this
 WORKSHEET_NAME = "NYC"
 
-def check_ethnicity(value):
-    if pd.isna(value) or str(value).strip() == "":
-        return "No"
-    elif "50% chinese" in str(value).lower():
-        return "Yes"
-    else:
-        return "No"
-
 @st.cache_data(ttl=10)
 def load_roster():
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
@@ -110,6 +102,8 @@ def load_roster():
         'Registration Name': 'Team',
         'Wristband': 'Wristband Color'
     }, inplace=True)
+
+    df["Division"] = df["Gender"].map({"Male": "Men's", "Female": "Women's"})
 
 def main():
 
