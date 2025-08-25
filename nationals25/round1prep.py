@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 # --- CONFIG ---
 SHEET_KEY = "1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8"
 
-START_TIME = datetime.strptime("07:30", "%H:%M")
+START_TIME = datetime.strptime("08:30", "%H:%M")
 GAME_DURATION = timedelta(hours=1)
 
 # --- AUTH ---
