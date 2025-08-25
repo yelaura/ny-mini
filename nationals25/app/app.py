@@ -90,8 +90,7 @@ def load_roster():
     worksheet = sheet.worksheet(WORKSHEET_NAME)
 
     data = worksheet.get_all_records()
-    df = pd.DataFrame(data)
-    df = df.astype(str)
+    df = pd.DataFrame(data).astype(str)
 
     # Standardize column names
     df.columns = df.columns.str.strip()
