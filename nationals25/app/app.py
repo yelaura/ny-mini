@@ -74,7 +74,7 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
     return pd.DataFrame(results)
 
 # ---- MAIN APP ----
-st.title("🏐 NACIVT NYC")
+st.title("🏐 The 80th NACIVT in NYC")  # Fixed title
 
 tabs = st.tabs(["Schedule", "Results", "Roster"])
 
@@ -85,9 +85,14 @@ with tabs[0]:
     schedule_tab = MEN_SHEET_KEY if division_sched == "Men's" else WOMEN_SHEET_KEY
     schedule_df = load_sheet(SCHEDULE_SHEET_ID, schedule_tab)
 
-    all_teams_sched = []
-    if schedule_df is not None and not schedule_df.empty:
-        all_teams_sched = sorted(set(schedule_df.get("Team 1", []) + schedule_df.get("Team 2", []) + schedule_df.get("Work Team", [])))
+    # Ensure unique team names for selectbox
+    all_teams_sched = pd.Series(
+        schedule_df["Team 1"].tolist() +
+        schedule_df["Team 2"].tolist() +
+        schedule_df["Work Team"].tolist()
+    ).dropna().astype(str).str.strip()
+    all_teams_sched = sorted(all_teams_sched[all_teams_sched != ""].unique())
+
     team_sched = st.selectbox("Select Team (Schedule)", all_teams_sched, key="sched_team")
 
     if schedule_df is not None and not schedule_df.empty and team_sched:
@@ -102,18 +107,21 @@ with tabs[1]:
     division_res = st.selectbox("Select Division (Results)", ["Men's", "Women's"], key="res_div")
     sheet_key_res = MEN_RESULTS_KEY if division_res == "Men's" else WOMEN_RESULTS_KEY
     
-    # Load the single results sheet (contains all rounds)
     df_results = load_sheet(RESULTS_SHEET_ID, sheet_key_res)
     
-    # Populate team selection dynamically
-    all_teams_res = sorted(set(df_results.get("Team 1 Name", []) + df_results.get("Team 2 Name", [])))
+    # Ensure unique team names for selectbox
+    all_teams_res = pd.Series(
+        df_results["Team 1 Name"].tolist() +
+        df_results["Team 2 Name"].tolist()
+    ).dropna().astype(str).str.strip()
+    all_teams_res = sorted(all_teams_res[all_teams_res != ""].unique())
+
     team_res = st.selectbox("Select Team (Results)", all_teams_res, key="res_team")
     
     # Define rounds by Timestamp
     ROUND_DATES = {
         "Round 1": "2025-08-30",
         "Round 2": "2025-08-31",
-        # Add Round 3 if needed
     }
     
     for round_name, round_date in ROUND_DATES.items():
