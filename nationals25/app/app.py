@@ -76,7 +76,7 @@ def load_team_results(df, team):
 SHEET_NAME = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"  # <-- Change this
 WORKSHEET_NAME = "NYC"
 
-@st.cache_data(ttl=10)
+# @st.cache_data(ttl=10)
 def load_roster():
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
