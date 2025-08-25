@@ -29,7 +29,11 @@ def load_sheet(sheet_id, worksheet_name):
     gc = gspread.authorize(creds)
     ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
     data = ws.get_all_records()
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+    
+    # Strip whitespace from column names
+    df.columns = df.columns.str.strip()
+    return df
 
 # ---- HELPER FUNCTIONS ----
 def compute_status(row, team_name):
@@ -138,13 +142,22 @@ with tabs[2]:
     st.header("Roster")
     division_roster = st.selectbox("Select Division (Roster)", ["Men's", "Women's"], key="roster_div")
     roster_df = load_sheet(ROSTER_SHEET_ID, ROSTER_WORKSHEET_NAME)
+
+    # Strip columns and rename consistently
+    roster_df.rename(columns={
+        'Name': 'Player Name',
+        'Jersey Number': 'Jersey #',
+        'Wristband': 'Wristband Color',
+        'Registration Name': 'Team',
+        'Gender': 'Gender'
+    }, inplace=True)
     roster_df["Division"] = roster_df["Gender"].map({"Male": "Men's", "Female": "Women's"})
     roster_div = roster_df[roster_df["Division"] == division_roster]
 
-    all_teams_roster = sorted(roster_div["Registration Name"].unique())
+    all_teams_roster = sorted(roster_div["Team"].unique())
     team_roster = st.selectbox("Select Team (Roster)", all_teams_roster, key="roster_team")
 
-    team_roster_df = roster_div[roster_div["Registration Name"] == team_roster][
+    team_roster_df = roster_div[roster_div["Team"] == team_roster][
         ["Player Name", "Jersey #", "Wristband Color"]
     ].reset_index(drop=True)
     st.dataframe(team_roster_df)
