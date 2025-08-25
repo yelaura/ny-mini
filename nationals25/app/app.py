@@ -73,8 +73,8 @@ def load_team_results(df, team):
 
 
 # ---- ROSTER CONFIG ----
-SHEET_NAME = "1MFrHYek18M6W9h1NI7r_dZbMGO_Ki-EjNnvASflelvw"  # <-- Change this
-WORKSHEET_NAME = "Sheet1"
+SHEET_NAME = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"  # <-- Change this
+WORKSHEET_NAME = "NYC"
 
 def check_ethnicity(value):
     if pd.isna(value) or str(value).strip() == "":
@@ -110,33 +110,8 @@ def load_roster():
         'Name': 'Player Name',
         'Jersey Number': 'Jersey #',
         'Registration Name': 'Team',
-        'Are You 100% Chinese?': '100% Chinese?',
-        'If No, Please Provide Perce...': 'Percent Chinese',
-        'Category Type Name': 'Division'
+        'Wristband': 'Wristband Color'
     }, inplace=True)
-
-    df["Is 50% Chinese?"] = df["Percent Chinese"].apply(check_ethnicity)
-    df["Division"] = df["Division"].apply(
-        lambda x: "Women's" if pd.notna(x) and "women" in x.lower() else "Men's"
-    )
-
-    # Derive Ethnicity column
-    def determine_ethnicity(row):
-        full_chinese = str(row["100% Chinese?"]).strip().lower()
-        half_chinese = str(row["Is 50% Chinese?"]).strip().lower()
-        other_info = str(row["Percent Chinese"]).strip()
-
-        if full_chinese == "yes":
-            return "G"
-        elif half_chinese == "yes":
-            return "Y"
-        elif other_info != "":
-            return "P"
-        else:
-            return ""
-
-    df['Wristband Color'] = df.apply(determine_ethnicity, axis=1)
-    return df[['Division', 'Team', 'Player Name', 'Jersey #', 'Wristband Color']]
 
 def main():
 
