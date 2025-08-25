@@ -84,7 +84,7 @@ def check_ethnicity(value):
     else:
         return "No"
 
-@st.cache_data(ttl=43200)
+@st.cache_data(ttl=10)
 def load_roster():
     service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
     creds = Credentials.from_service_account_info(
@@ -102,8 +102,6 @@ def load_roster():
 
     # Standardize column names
     df.columns = df.columns.str.strip()
-
-    ## TODO: differentiate between mens and womens
 
     # Rename for convenience
     df.rename(columns={
