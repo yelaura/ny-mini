@@ -5,7 +5,7 @@ from google.oauth2.service_account import Credentials
 
 # ---- CONFIG ----
 # Schedule sheet
-SCHEDULE_SHEET_ID = "YOUR_SCHEDULE_SHEET_ID_HERE"
+SCHEDULE_SHEET_ID = "1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8"
 MEN_SHEET_KEY = "M_Scoresheets"
 WOMEN_SHEET_KEY = "W_Scoresheets"
 
@@ -81,7 +81,7 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
     return pd.DataFrame(results)
 
 # ---- MAIN APP ----
-st.title("🏐 NACIVT NYC")
+st.title("🏐 The 80th NACIVT in NYC")
 
 # Create tabs
 tabs = st.tabs(["Schedule", "Results", "Roster"])
@@ -94,7 +94,7 @@ with tabs[0]:
 
     # Load schedule data
     schedule_sheet = MEN_SHEET_KEY if division == "Men's" else WOMEN_SHEET_KEY
-    schedule_df = load_sheet("1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8", schedule_sheet)
+    schedule_df = load_sheet(SCHEDULE_SHEET_ID, schedule_sheet)
 
     # Populate team selectbox dynamically
     if schedule_df is not None and not schedule_df.empty:
