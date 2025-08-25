@@ -88,8 +88,9 @@ def load_roster():
     sheet = gc.open_by_key(SHEET_NAME)
     worksheet = sheet.worksheet(WORKSHEET_NAME)
 
-    data = worksheet.get_all_records()
-    df = pd.DataFrame(data)
+    # Fetch only columns A:H
+    data = worksheet.get("A:H")  # returns a list of lists
+    df = pd.DataFrame(data[1:], columns=data[0])  # first row as headers
 
     # Force all values to string (Arrow-safe)
     df = df.fillna("").astype(str)
