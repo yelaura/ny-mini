@@ -39,10 +39,10 @@ def load_results_sheet(sheet_id, sheet_name):
     # If sheet is empty, return an empty DataFrame with the expected columns
     if df.empty or len(df.columns) == 1 and df.columns[0].startswith("Unnamed"):
         expected_cols = [
-            "Timestamp", "Court Number", "Round", "Work Team",
-            "Ref?", "Division", "Team 1", "Team 2",
-            "Set 1 T1", "Set 1 T2", "Set 2 T1", "Set 2 T2",
-            "Set 3 T1", "Set 3 T2"
+            "Timestamp", "Court Number", "Game Number (1-10)", "Have both team captains signed scoresheets?",
+            "Your initials", "Team 1 Name", "Team 2 Name", "Team 1 Score",
+            "Team 2 Score", "Team 1 Score 2", "Team 2 Score 2", "Team 1 Total Content Violations",
+            "Team 2 Total Content Violations"
         ]
         return pd.DataFrame(columns=expected_cols)
 
