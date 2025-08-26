@@ -144,37 +144,46 @@ with tabs[0]:
 
 
 # --- RESULTS TAB ---
+# ---- RESULTS TAB ----
 with tabs[1]:
     st.header("Results")
     division_res = st.selectbox("Select Division (Results)", ["Men's", "Women's"], key="res_div")
     sheet_key_res = MEN_RESULTS_KEY if division_res == "Men's" else WOMEN_RESULTS_KEY
     
     df_results = load_results_sheet(RESULTS_SHEET_ID, sheet_key_res)
-    
-    # Get unique team names for selector
-    all_teams_res = pd.Series(
-        df_results["Team 1 Name"].tolist() +
-        df_results["Team 2 Name"].tolist()
-    ).dropna().astype(str).str.strip()
-    all_teams_res = sorted(all_teams_res[all_teams_res != ""].unique())
 
-    team_res = st.selectbox("Select Team (Results)", all_teams_res, key="res_team")
-    
-    # Define round dates
-    ROUND_DATES = {
-        "Round 1": pd.to_datetime("2025-08-30").date(),
-        "Round 2": pd.to_datetime("2025-08-31").date(),
-    }
-    
-    for round_name, round_date in ROUND_DATES.items():
-        st.subheader(round_name)
-        # Filter by date only
-        round_df = df_results[df_results["Timestamp"].dt.date == round_date]
-        df_team_results = load_team_results(round_df, team_res)
-        if not df_team_results.empty:
-            st.dataframe(df_team_results)
+    if df_results.empty:
+        st.info("No results available yet for this division.")
+    else:
+        # Get unique team names for selector
+        all_teams_res = pd.Series(
+            df_results.get("Team 1 Name", []).tolist() +
+            df_results.get("Team 2 Name", []).tolist()
+        ).dropna().astype(str).str.strip()
+        all_teams_res = sorted(all_teams_res[all_teams_res != ""].unique())
+
+        if not all_teams_res:
+            st.info("No teams found in results yet.")
         else:
-            st.info(f"No results for {team_res} on {round_name}")
+            team_res = st.selectbox("Select Team (Results)", all_teams_res, key="res_team")
+            
+            # Define round dates
+            ROUND_DATES = {
+                "Round 1": pd.to_datetime("2025-08-30").date(),
+                "Round 2": pd.to_datetime("2025-08-31").date(),
+            }
+            
+            for round_name, round_date in ROUND_DATES.items():
+                st.subheader(round_name)
+                # Filter by date only
+                round_df = df_results[df_results["Timestamp"].dt.date == round_date] if "Timestamp" in df_results.columns else pd.DataFrame()
+                df_team_results = load_team_results(round_df, team_res) if not round_df.empty else pd.DataFrame()
+                
+                if not df_team_results.empty:
+                    st.dataframe(df_team_results)
+                else:
+                    st.info(f"No results for {team_res} on {round_name}")
+
 
 # --- ROSTER TAB ---
 with tabs[2]:
