@@ -111,12 +111,12 @@ with tabs[0]:
 
 if schedule_df is not None and not schedule_df.empty:
     # Normalize team names in dataframe
-    schedule_df["Team 1"] = schedule_df["Team 1"].astype(str).str.strip().str.lower()
-    schedule_df["Team 2"] = schedule_df["Team 2"].astype(str).str.strip().str.lower()
-    schedule_df["Work Team"] = schedule_df["Work Team"].astype(str).str.strip().str.lower()
+    schedule_df["Team 1"] = schedule_df["Team 1"].astype(str).str.strip()
+    schedule_df["Team 2"] = schedule_df["Team 2"].astype(str).str.strip()
+    schedule_df["Work Team"] = schedule_df["Work Team"].astype(str).str.strip()
 
     # Normalize the selected team
-    team_sched_norm = str(team_sched).strip().lower()
+    team_sched_norm = str(team_sched).strip()
 
     # Find the team’s court
     team_rows = schedule_df[
