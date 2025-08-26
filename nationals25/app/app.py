@@ -109,20 +109,39 @@ with tabs[0]:
     all_teams_sched = sorted(all_teams_sched[all_teams_sched != ""].unique())
     team_sched = st.selectbox("Select Team (Schedule)", all_teams_sched, key="sched_team")
 
-    if schedule_df is not None and not schedule_df.empty:
-        # Find the team’s court
-        team_court = schedule_df[
-            (schedule_df["Team 1"] == team_sched) | 
-            (schedule_df["Team 2"] == team_sched) | 
-            (schedule_df["Work Team"] == team_sched)
-        ]["Court Number"].iloc[0]
+if schedule_df is not None and not schedule_df.empty:
+    # Normalize team names in dataframe
+    schedule_df["Team 1"] = schedule_df["Team 1"].astype(str).str.strip().str.lower()
+    schedule_df["Team 2"] = schedule_df["Team 2"].astype(str).str.strip().str.lower()
+    schedule_df["Work Team"] = schedule_df["Work Team"].astype(str).str.strip().str.lower()
+
+    # Normalize the selected team
+    team_sched_norm = str(team_sched).strip().lower()
+
+    # Find the team’s court
+    team_rows = schedule_df[
+        (schedule_df["Team 1"] == team_sched_norm) | 
+        (schedule_df["Team 2"] == team_sched_norm) | 
+        (schedule_df["Work Team"] == team_sched_norm)
+    ]
+
+    if not team_rows.empty:
+        team_court = team_rows["Court Number"].iloc[0]
 
         # Filter schedule to that court only
         team_schedule = schedule_df[schedule_df["Court Number"] == team_court].copy()
-        team_schedule["Team Status"] = team_schedule.apply(lambda r: compute_status(r, team_sched), axis=1)
+
+        # Compute status using normalized names
+        team_schedule["Team Status"] = team_schedule.apply(
+            lambda r: compute_status(r, team_sched_norm), axis=1
+        )
+
         team_schedule.sort_values(by="Game Number", inplace=True, ignore_index=True)
 
         st.dataframe(team_schedule.style.apply(highlight_status, axis=1))
+    else:
+        st.warning(f"No schedule found for team {team_sched}")
+
 
 # --- RESULTS TAB ---
 with tabs[1]:
