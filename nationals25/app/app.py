@@ -33,7 +33,7 @@ def load_sheet(sheet_id, worksheet_name):
     # rename columns
     df.rename(columns={
         "Court Number": "Court #",
-        "Game Number (1-10)": "Game #"
+        "Game Number": "Game #"
     }, inplace=True)
     
     return df
