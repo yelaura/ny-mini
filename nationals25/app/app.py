@@ -95,7 +95,7 @@ tabs = st.tabs(["Schedule", "Results", "Roster"])
 
 # --- SCHEDULE TAB ---
 with tabs[0]:
-    st.header("Schedule")
+    st.header("Schedule (Round 1)")
     division_sched = st.selectbox("Select Division (Schedule)", ["Men's", "Women's"], key="sched_div")
     schedule_tab = MEN_SHEET_KEY if division_sched == "Men's" else WOMEN_SHEET_KEY
     schedule_df = load_sheet(SCHEDULE_SHEET_ID, schedule_tab)
