@@ -49,17 +49,21 @@ def load_results_sheet(sheet_id, worksheet_name):
     ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
     data = ws.get_all_records()
     df = pd.DataFrame(data)
-    df.columns = df.columns.str.strip()
-    
-    # rename columns
-    df.rename(columns={
-        "Court Number": "Court #",
-        "Game Number (1-10)": "Game #"
-    }, inplace=True)
-    
-    # convert timestamp
-    if "Timestamp" in df.columns:
-        df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors='coerce')
+
+    if df.empty:
+        return df
+    else:
+        df.columns = df.columns.str.strip()
+        
+        # rename columns
+        df.rename(columns={
+            "Court Number": "Court #",
+            "Game Number (1-10)": "Game #"
+        }, inplace=True)
+        
+        # convert timestamp
+        if "Timestamp" in df.columns:
+            df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors='coerce')
     
     return df
 
