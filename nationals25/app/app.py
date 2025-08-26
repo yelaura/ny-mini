@@ -204,7 +204,7 @@ with tabs[1]:
                 else:
                     st.info(f"No results for {team_res} on {round_name}")
 
-    st.warning("Results may take up to 20 minutes to update. For disputes and errors, please contact lye@nystrangers.org")
+    st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
 
 # --- ROSTER TAB ---
 with tabs[2]:
