@@ -47,6 +47,12 @@ def load_results_sheet(sheet_id, worksheet_name):
     return df
 
 # ---- HELPER FUNCTIONS ----
+def normalize_name(name):
+    """Convert team/player name to lowercase stripped string for safe comparison."""
+    if pd.isna(name):
+        return ""
+    return str(name).strip().lower()
+
 def preprocess_schedule(df):
     """Add normalized columns for safe matching but keep original names for display."""
     for col in ["Team 1", "Team 2", "Work Team"]:
