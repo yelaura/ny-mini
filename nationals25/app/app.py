@@ -32,27 +32,22 @@ def load_sheet(sheet_id, worksheet_name):
     return df
 
 @st.cache_data(ttl=15*60)  # 15 minutes
-def load_results_sheet(sheet_id, sheet_name):
-    url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
-    df = pd.read_csv(url)
-
-    # If sheet is empty, return an empty DataFrame with the expected columns
-    if df.empty or len(df.columns) == 1 and df.columns[0].startswith("Unnamed"):
-        expected_cols = [
-            "Timestamp", "Court Number", "Game Number (1-10)", "Have both team captains signed scoresheets?",
-            "Your initials", "Team 1 Name", "Team 2 Name", "Team 1 Score",
-            "Team 2 Score", "Team 1 Score 2", "Team 2 Score 2", "Team 1 Total Content Violations",
-            "Team 2 Total Content Violations"
-        ]
-        return pd.DataFrame(columns=expected_cols)
-
-    # Clean headers
-    df.columns = df.columns.map(str).str.strip()
-
-    # Normalize Timestamp if present
+def load_results_sheet(sheet_id, worksheet_name):
+    service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
+    creds = Credentials.from_service_account_info(
+        service_account_info,
+        scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    )
+    gc = gspread.authorize(creds)
+    ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
+    data = ws.get_all_records()
+    df = pd.DataFrame(data)
+    if df.empty:
+        return df
+    df.columns = df.columns.str.strip()
+    # Convert Timestamp column if it exists
     if "Timestamp" in df.columns:
         df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors="coerce")
-
     return df
 
 # ---- HELPER FUNCTIONS ----
