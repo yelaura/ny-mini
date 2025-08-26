@@ -204,6 +204,7 @@ with tabs[1]:
                 else:
                     st.info(f"No results for {team_res} on {round_name}")
 
+    st.warning("Results update every 15 minutes. For disputes and errors, please contact lye@nystrangers.org")
 
 # --- ROSTER TAB ---
 with tabs[2]:
