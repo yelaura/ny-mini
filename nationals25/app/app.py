@@ -42,7 +42,7 @@ def load_results_sheet(sheet_id, worksheet_name):
     ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
     data = ws.get_all_records()
     df = pd.DataFrame(data)
-    df.columns = df.columns.str.strip()
+    # df.columns = df.columns.str.strip()
     df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors='coerce')
     return df
 
