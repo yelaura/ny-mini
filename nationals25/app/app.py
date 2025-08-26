@@ -32,18 +32,27 @@ def load_sheet(sheet_id, worksheet_name):
     return df
 
 @st.cache_data(ttl=15*60)  # 15 minutes
-def load_results_sheet(sheet_id, worksheet_name):
-    service_account_info = st.secrets["GCP_SERVICE_ACCOUNT"]
-    creds = Credentials.from_service_account_info(
-        service_account_info,
-        scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
-    )
-    gc = gspread.authorize(creds)
-    ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
-    data = ws.get_all_records()
-    df = pd.DataFrame(data)
-    # df.columns = df.columns.str.strip()
-    df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors='coerce')
+def load_results_sheet(sheet_id, sheet_name):
+    url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+    df = pd.read_csv(url)
+
+    # If sheet is empty, return an empty DataFrame with the expected columns
+    if df.empty or len(df.columns) == 1 and df.columns[0].startswith("Unnamed"):
+        expected_cols = [
+            "Timestamp", "Court Number", "Round", "Work Team",
+            "Ref?", "Division", "Team 1", "Team 2",
+            "Set 1 T1", "Set 1 T2", "Set 2 T1", "Set 2 T2",
+            "Set 3 T1", "Set 3 T2"
+        ]
+        return pd.DataFrame(columns=expected_cols)
+
+    # Clean headers
+    df.columns = df.columns.map(str).str.strip()
+
+    # Normalize Timestamp if present
+    if "Timestamp" in df.columns:
+        df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors="coerce")
+
     return df
 
 # ---- HELPER FUNCTIONS ----
@@ -143,7 +152,6 @@ with tabs[0]:
             st.warning(f"No schedule found for team {team_sched}")
 
 
-# --- RESULTS TAB ---
 # ---- RESULTS TAB ----
 with tabs[1]:
     st.header("Results")
