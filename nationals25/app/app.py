@@ -33,7 +33,6 @@ def load_sheet(sheet_id, worksheet_name):
     # rename columns
     df.rename(columns={
         "Court Number": "Court #",
-        "Game Number": "Game #",
         "Game Number (1-10)": "Game #"
     }, inplace=True)
     
@@ -55,7 +54,6 @@ def load_results_sheet(sheet_id, worksheet_name):
     # rename columns
     df.rename(columns={
         "Court Number": "Court #",
-        "Game Number": "Game #",
         "Game Number (1-10)": "Game #"
     }, inplace=True)
     
@@ -99,7 +97,7 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
         winner = team if team_points > opp_points else row[team1_col] if row[team1_col] != team else row[team2_col] if team_points < opp_points else "Tie"
         results.append({
             "Court #": row.get("Court #", ""),
-            "Game #": row.get("Game Number (1-10)", ""),
+            "Game #": row.get("Game #", ""),
             "Opponent": row[team1_col] if row[team1_col] != team else row[team2_col],
             "Score 1": score1,
             "Score 2": score2,
