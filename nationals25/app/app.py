@@ -47,42 +47,13 @@ def load_results_sheet(sheet_id, worksheet_name):
     return df
 
 # ---- HELPER FUNCTIONS ----
-def normalize_name(name):
-    """Convert team/player name to lowercase stripped string for safe comparison."""
-    if pd.isna(name):
-        return ""
-    return str(name).strip().lower()
-
-def preprocess_schedule(df):
-    """Add normalized columns for safe matching but keep original names for display."""
-    for col in ["Team 1", "Team 2", "Work Team"]:
-        if col in df.columns:
-            df[col + " Norm"] = df[col].apply(normalize_name)
-    return df
-
 def compute_status(row, team_name):
-    team_norm = normalize_name(team_name)
-    if row.get("Team 1 Norm") == team_norm or row.get("Team 2 Norm") == team_norm:
+    if row.get("Team 1") == team_name or row.get("Team 2") == team_name:
         return "Playing"
-    elif row.get("Work Team Norm") == team_norm:
+    elif row.get("Work Team") == team_name:
         return "Working"
     else:
         return "Off"
-
-def get_team_schedule(schedule_df, team_name):
-    team_norm = normalize_name(team_name)
-
-    # Filter with normalized columns, but select original names for display
-    team_court = schedule_df[
-        (schedule_df["Team 1 Norm"] == team_norm) |
-        (schedule_df["Team 2 Norm"] == team_norm) |
-        (schedule_df["Work Team Norm"] == team_norm)
-    ]["Court Number"].iloc[0]
-
-    court_df = schedule_df[schedule_df["Court Number"] == team_court].copy()
-    court_df["Status"] = court_df.apply(lambda r: compute_status(r, team_name), axis=1)
-
-    return court_df[["Court Number", "Game Number (1-10)", "Team 1", "Team 2", "Work Team", "Status"]]
 
 def highlight_status(row):
     theme = st.get_option("theme.base")
