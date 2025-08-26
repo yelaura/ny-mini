@@ -29,6 +29,14 @@ def load_sheet(sheet_id, worksheet_name):
     data = ws.get_all_records()
     df = pd.DataFrame(data)
     df.columns = df.columns.str.strip()
+    
+    # rename columns
+    df.rename(columns={
+        "Court Number": "Court #",
+        "Game Number": "Game #",
+        "Game Number (1-10)": "Game #"
+    }, inplace=True)
+    
     return df
 
 @st.cache_data(ttl=15*60)  # 15 minutes
@@ -42,12 +50,19 @@ def load_results_sheet(sheet_id, worksheet_name):
     ws = gc.open_by_key(sheet_id).worksheet(worksheet_name)
     data = ws.get_all_records()
     df = pd.DataFrame(data)
-    if df.empty:
-        return df
     df.columns = df.columns.str.strip()
-    # Convert Timestamp column if it exists
+    
+    # rename columns
+    df.rename(columns={
+        "Court Number": "Court #",
+        "Game Number": "Game #",
+        "Game Number (1-10)": "Game #"
+    }, inplace=True)
+    
+    # convert timestamp
     if "Timestamp" in df.columns:
-        df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors="coerce")
+        df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors='coerce')
+    
     return df
 
 # ---- HELPER FUNCTIONS ----
@@ -83,8 +98,8 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
         opp_points = row.get('Team 2 Score', 0) + row.get('Team 2 Score 2', 0) if row[team1_col] == team else row.get('Team 1 Score', 0) + row.get('Team 1 Score 2', 0)
         winner = team if team_points > opp_points else row[team1_col] if row[team1_col] != team else row[team2_col] if team_points < opp_points else "Tie"
         results.append({
-            "Court Number": row.get("Court Number", ""),
-            "Game Number": row.get("Game Number (1-10)", ""),
+            "Court #": row.get("Court #", ""),
+            "Game #": row.get("Game Number (1-10)", ""),
             "Opponent": row[team1_col] if row[team1_col] != team else row[team2_col],
             "Score 1": score1,
             "Score 2": score2,
@@ -130,17 +145,17 @@ with tabs[0]:
         ]
 
         if not team_rows.empty:
-            team_court = team_rows["Court Number"].iloc[0]
+            team_court = team_rows["Court #"].iloc[0]
 
             # Filter schedule to that court only
-            team_schedule = schedule_df[schedule_df["Court Number"] == team_court].copy()
+            team_schedule = schedule_df[schedule_df["Court #"] == team_court].copy()
 
             # Compute status using normalized names
             team_schedule["Team Status"] = team_schedule.apply(
                 lambda r: compute_status(r, team_sched_norm), axis=1
             )
 
-            team_schedule.sort_values(by="Game Number", inplace=True, ignore_index=True)
+            team_schedule.sort_values(by="Game #", inplace=True, ignore_index=True)
 
             st.dataframe(team_schedule.style.apply(highlight_status, axis=1))
         else:
