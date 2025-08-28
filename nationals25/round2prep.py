@@ -7,7 +7,7 @@ from gspread.utils import rowcol_to_a1
 
 # --- CONFIG ---
 SHEET_KEY = "18qz3f2-tqRwUoc54_5DHdkNcju2gRIaDHDYSQGRhPUk"
-START_TIME = datetime.strptime("08:30", "%H:%M")
+START_TIME = datetime.strptime("07:30", "%H:%M")
 GAME_DURATION = timedelta(hours=1)
 
 # --- AUTH ---
