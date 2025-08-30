@@ -4,7 +4,8 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # ---- CONFIG ----
-SCHEDULE_SHEET_ID = "1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8"
+# SCHEDULE_SHEET_ID = "1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8"
+SCHEDULE_SHEET_ID = "18qz3f2-tqRwUoc54_5DHdkNcju2gRIaDHDYSQGRhPUk" # second day schedule
 RESULTS_SHEET_ID = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
 ROSTER_SHEET_ID = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"
 

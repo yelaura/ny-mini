@@ -149,10 +149,10 @@ def write_results(sheet_name, df):
 # =======================
 # Run
 # =======================
-mens_results = process_division("Mens")
+# mens_results = process_division("Mens")
 womens_results = process_division("Womens")
 
-write_results("Mens_Day1", mens_results)
-# write_results("Womens_Day1", womens_results)
+# write_results("Mens_Day1", mens_results)
+write_results("Womens_Day1", womens_results)
 
 print("✅ Ranking completed and written to output sheet.")
