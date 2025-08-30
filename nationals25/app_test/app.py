@@ -110,6 +110,67 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
         })
     return pd.DataFrame(results)
 
+# ---- HELPER: COURT STANDINGS ----
+def compute_court_standings(results_df, court_num):
+    """Compute standings for all teams on a given court."""
+    court_df = results_df[results_df["Court #"] == court_num]
+    teams = pd.unique(court_df[["Team 1 Name", "Team 2 Name"]].values.ravel())
+    standings = []
+
+    for team in teams:
+        if pd.isna(team) or team.strip() == "":
+            continue
+
+        team_games = court_df[
+            (court_df["Team 1 Name"] == team) | (court_df["Team 2 Name"] == team)
+        ]
+        
+        wins, losses, points_for, points_against = 0, 0, 0, 0
+
+        for _, row in team_games.iterrows():
+            # skip games without scores
+            if pd.isna(row.get("Team 1 Score")) or pd.isna(row.get("Team 2 Score")):
+                continue  
+
+            t1, t2 = row.get("Team 1 Name"), row.get("Team 2 Name")
+            s1, s2 = row.get("Team 1 Score", 0), row.get("Team 2 Score", 0)
+            s1b, s2b = row.get("Team 1 Score 2", 0), row.get("Team 2 Score 2", 0)
+
+            if team == t1:
+                points_for += s1 + s1b
+                points_against += s2 + s2b
+                if (s1 + s1b) > (s2 + s2b):
+                    wins += 1
+                elif (s1 + s1b) < (s2 + s2b):
+                    losses += 1
+            elif team == t2:
+                points_for += s2 + s2b
+                points_against += s1 + s1b
+                if (s2 + s2b) > (s1 + s1b):
+                    wins += 1
+                elif (s2 + s2b) < (s1 + s1b):
+                    losses += 1
+
+        # compute metrics
+        point_diff = points_for - points_against
+        point_ratio = round(points_for / points_against, 3) if points_against > 0 else "N/A"
+
+        standings.append({
+            "Team": team,
+            "Wins": wins,
+            "Losses": losses,
+            "Point Differential": point_diff,
+            "Point Ratio": point_ratio
+        })
+
+    standings_df = pd.DataFrame(standings)
+    standings_df.sort_values(
+        by=["Wins", "Point Differential", "Point Ratio"], 
+        ascending=[False, False, False], 
+        inplace=True
+    )
+    return standings_df.reset_index(drop=True)
+
 # ---- MAIN APP ----
 st.title("🏐 The 80th NACIVT in NYC")  # fixed title
 
@@ -205,8 +266,31 @@ with tabs[1]:
                 else:
                     st.info(f"No results for {team_res} on {round_name}")
 
-    st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
+                # --- Add Court Standings after each round ---
+                if not round_df.empty:
+                    team_rows = round_df[
+                        (round_df["Team 1 Name"] == team_res) | 
+                        (round_df["Team 2 Name"] == team_res)
+                    ]
+                    if not team_rows.empty:
+                        team_court = team_rows["Court #"].iloc[0]
+                        st.subheader(f"Court {team_court} Standings ({round_name})")
+                        standings_df = compute_court_standings(round_df, team_court)
 
+                        # Highlight selected team
+                        def highlight_team(row, team_name=team_res):
+                            return [
+                                'background-color: yellow; font-weight: bold;' 
+                                if row["Team"] == team_name else ''
+                                for _ in row
+                            ]
+
+                        st.dataframe(
+                            standings_df.style.apply(highlight_team, team_name=team_res, axis=1)
+                        )
+
+    st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
+    
 # --- ROSTER TAB ---
 with tabs[2]:
     st.header("Roster")
