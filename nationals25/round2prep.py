@@ -86,12 +86,12 @@ def main():
     # Mens Round 2: courts C3:Y3, teams C4:Y8
     men_maps, men_courts = get_court_team_maps("Round 2 Pools", court_row=3, team_start_row=4, team_end_row=8)
     men_sched = expand_schedule(men_maps, men_courts, pool_df)
-    write_schedule(men_sched, "M_Schedule")
+    write_schedule(men_sched, "M_Scoresheets")
 
     # Womens Round 2: courts C13:T13, teams C14:T18
     women_maps, women_courts = get_court_team_maps("Round 2 Pools", court_row=13, team_start_row=14, team_end_row=18)
     women_sched = expand_schedule(women_maps, women_courts, pool_df)
-    write_schedule(women_sched, "W_Schedule")
+    write_schedule(women_sched, "W_Scoresheets")
 
 if __name__ == "__main__":
     main()
