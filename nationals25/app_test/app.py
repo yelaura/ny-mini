@@ -112,7 +112,7 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
 
 # ---- HELPER: COURT STANDINGS ----
 def compute_court_standings(results_df, court_num):
-    """Compute standings for all teams on a given court."""
+    """Compute standings for all teams on a given court (wins/losses per set)."""
     court_df = results_df[results_df["Court #"] == court_num]
     teams = pd.unique(court_df[["Team 1 Name", "Team 2 Name"]].values.ravel())
     standings = []
@@ -133,22 +133,39 @@ def compute_court_standings(results_df, court_num):
                 continue  
 
             t1, t2 = row.get("Team 1 Name"), row.get("Team 2 Name")
-            s1, s2 = row.get("Team 1 Score", 0), row.get("Team 2 Score", 0)
-            s1b, s2b = row.get("Team 1 Score 2", 0), row.get("Team 2 Score 2", 0)
 
+            # --- First set ---
+            s1, s2 = row.get("Team 1 Score", 0), row.get("Team 2 Score", 0)
             if team == t1:
-                points_for += s1 + s1b
-                points_against += s2 + s2b
-                if (s1 + s1b) > (s2 + s2b):
+                points_for += s1
+                points_against += s2
+                if s1 > s2:
                     wins += 1
-                elif (s1 + s1b) < (s2 + s2b):
+                elif s1 < s2:
                     losses += 1
             elif team == t2:
-                points_for += s2 + s2b
-                points_against += s1 + s1b
-                if (s2 + s2b) > (s1 + s1b):
+                points_for += s2
+                points_against += s1
+                if s2 > s1:
                     wins += 1
-                elif (s2 + s2b) < (s1 + s1b):
+                elif s2 < s1:
+                    losses += 1
+
+            # --- Second set ---
+            s1b, s2b = row.get("Team 1 Score 2", 0), row.get("Team 2 Score 2", 0)
+            if team == t1:
+                points_for += s1b
+                points_against += s2b
+                if s1b > s2b:
+                    wins += 1
+                elif s1b < s2b:
+                    losses += 1
+            elif team == t2:
+                points_for += s2b
+                points_against += s1b
+                if s2b > s1b:
+                    wins += 1
+                elif s2b < s1b:
                     losses += 1
 
         # compute metrics
@@ -157,7 +174,7 @@ def compute_court_standings(results_df, court_num):
 
         standings.append({
             "Team": team,
-            "Wins": wins,
+            "Wins": wins,   # per set now
             "Losses": losses,
             "Point Differential": point_diff,
             "Point Ratio": point_ratio
@@ -165,7 +182,7 @@ def compute_court_standings(results_df, court_num):
 
     standings_df = pd.DataFrame(standings)
     standings_df.sort_values(
-        by=["Wins", "Point Differential", "Point Ratio"], 
+        by=["Wins (Sets)", "Point Differential", "Point Ratio"], 
         ascending=[False, False, False], 
         inplace=True
     )
