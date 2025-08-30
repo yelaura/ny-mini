@@ -7,8 +7,8 @@ from functools import cmp_to_key
 # =======================
 # Google Sheets Setup
 # =======================
-# INPUT_SHEET_ID = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
-INPUT_SHEET_ID = "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc" # test input
+INPUT_SHEET_ID = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
+# INPUT_SHEET_ID = "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc" # test input
 OUTPUT_SHEET_ID = "18qz3f2-tqRwUoc54_5DHdkNcju2gRIaDHDYSQGRhPUk"
 SERVICE_ACCOUNT_FILE = "service_account.json"  # Path to your JSON key
 
@@ -19,9 +19,8 @@ client = gspread.authorize(creds)
 # =======================
 # Ranking Logic
 # =======================
-
 def process_division(sheet_name):
-    """Process one division (Mens/Womens) into ranked results"""
+    """Process one division (Mens/Womens) into ranked results with Pool Ranking"""
     ws = client.open_by_key(INPUT_SHEET_ID).worksheet(sheet_name)
     data = ws.get_all_records()
     df = pd.DataFrame(data)
@@ -32,7 +31,6 @@ def process_division(sheet_name):
     # Compute stats per team
     stats = defaultdict(lambda: {
         "court": None,
-        "wins": 0,
         "sets_won": 0,
         "sets_lost": 0,
         "points_for": 0,
@@ -46,14 +44,13 @@ def process_division(sheet_name):
         s1a, s2a = int(row["Team 1 Score"]), int(row["Team 2 Score"])
         s1b, s2b = int(row.get("Team 1 Score 2", 0)), int(row.get("Team 2 Score 2", 0))
 
-        # Update both sets (first + second)
-        for sc, oc, t, opp in [(s1a, s2a, t1, t2), (s2a, s1a, t2, t1),
-                               (s1b, s2b, t1, t2), (s2b, s1b, t2, t1)]:
+        # Update per set stats
+        sets = [(s1a, s2a, t1, t2), (s2a, s1a, t2, t1), (s1b, s2b, t1, t2), (s2b, s1b, t2, t1)]
+        for sc, oc, t, opp in sets:
             stats[t]["court"] = court
             stats[t]["points_for"] += sc
             stats[t]["points_against"] += oc
             if sc > oc:
-                stats[t]["wins"] += 1
                 stats[t]["sets_won"] += 1
             else:
                 stats[t]["sets_lost"] += 1
@@ -71,7 +68,6 @@ def process_division(sheet_name):
         teams.append({
             "team": team,
             "court": st["court"],
-            "wins": st["wins"],
             "sets_won": st["sets_won"],
             "point_diff": pdiff,
             "point_ratio": round(pratio, 3),
@@ -80,28 +76,35 @@ def process_division(sheet_name):
 
     df_stats = pd.DataFrame(teams)
 
-    # Sort within each court with head-to-head logic
+    # Sort within each court with head-to-head + points logic
     courts_ranked = []
     for court, group in df_stats.groupby("court"):
         group = list(group.to_dict("records"))
 
         def compare_teams(a, b):
-            # 1. Wins
-            if a["wins"] != b["wins"]:
-                return b["wins"] - a["wins"]
+            # 1. Sets won (overall)
+            if a["sets_won"] != b["sets_won"]:
+                return b["sets_won"] - a["sets_won"]
 
-            # 2. Head-to-head (only if they played each other)
-            if b["team"] in a["head_to_head"] and a["team"] in b["head_to_head"]:
+            # 2. Head-to-head sets
+            if b["team"] in a["head_to_head"]:
                 a_vs_b = a["head_to_head"][b["team"]]
                 b_vs_a = b["head_to_head"][a["team"]]
+
                 if a_vs_b["wins"] != b_vs_a["wins"]:
                     return b_vs_a["wins"] - a_vs_b["wins"]
 
-            # 3. Point differential
+                # 3. Head-to-head points (if sets tied)
+                a_points = a_vs_b["points_for"] - a_vs_b["points_against"]
+                b_points = b_vs_a["points_for"] - b_vs_a["points_against"]
+                if a_points != b_points:
+                    return b_points - a_points
+
+            # 4. Point differential (overall)
             if a["point_diff"] != b["point_diff"]:
                 return b["point_diff"] - a["point_diff"]
 
-            # 4. Point ratio
+            # 5. Point ratio (overall)
             if a["point_ratio"] != b["point_ratio"]:
                 return -1 if a["point_ratio"] < b["point_ratio"] else 1
 
@@ -109,20 +112,23 @@ def process_division(sheet_name):
 
         group.sort(key=cmp_to_key(compare_teams))
 
+        # Assign Pool Ranking within each court
         for i, t in enumerate(group, 1):
-            t["intrapool_rank"] = i
+            t["Pool Ranking"] = i
         courts_ranked.extend(group)
 
     df_ranked = pd.DataFrame(courts_ranked)
 
-    # Global ranking (across courts) — NO head-to-head
+    # Global ranking (across courts) — sorted by Pool Ranking, sets won, point diff, point ratio
     df_ranked = df_ranked.sort_values(
-        by=["intrapool_rank", "sets_won", "point_diff", "point_ratio"],
+        by=["Pool Ranking", "sets_won", "point_diff", "point_ratio"],
         ascending=[True, False, False, False]
     ).reset_index(drop=True)
 
     df_ranked["Overall Rank"] = df_ranked.index + 1
-    return df_ranked[["Overall Rank", "team", "court", "sets_won", "point_diff", "point_ratio"]]
+
+    # Return columns with Pool Ranking right after team name
+    return df_ranked[["Overall Rank", "team", "Pool Ranking", "court", "sets_won", "point_diff", "point_ratio"]]
 
 
 # =======================
@@ -147,6 +153,6 @@ mens_results = process_division("Mens")
 womens_results = process_division("Womens")
 
 write_results("Mens_Day1", mens_results)
-write_results("Womens_Day1", womens_results)
+# write_results("Womens_Day1", womens_results)
 
 print("✅ Ranking completed and written to output sheet.")
