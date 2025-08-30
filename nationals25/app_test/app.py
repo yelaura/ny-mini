@@ -174,7 +174,7 @@ def compute_court_standings(results_df, court_num):
 
         standings.append({
             "Team": team,
-            "Wins": wins,   # per set now
+            "Wins (Sets)": wins,   # per set now
             "Losses": losses,
             "Point Differential": point_diff,
             "Point Ratio": point_ratio
