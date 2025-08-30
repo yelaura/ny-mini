@@ -4,7 +4,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # ---- CONFIG ----
-SCHEDULE_SHEET_ID = "1ZHacBdlQy3sLp-qmkOUShn7IeA1nr-zQEul1kdmU-W8"
+SCHEDULE_SHEET_ID = "18qz3f2-tqRwUoc54_5DHdkNcju2gRIaDHDYSQGRhPUk"
 RESULTS_SHEET_ID = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
 ROSTER_SHEET_ID = "1sLcO9XSJTVmO2lNzZUxLLEM4pMuVzfAvzH1NRU7VQRc"
 
@@ -116,7 +116,7 @@ tabs = st.tabs(["Schedule", "Results", "Roster"])
 
 # --- SCHEDULE TAB ---
 with tabs[0]:
-    st.header("Schedule (Round 1)")
+    st.header("Schedule (Round 2)")
     division_sched = st.selectbox("Select Division (Schedule)", ["Men's", "Women's"], key="sched_div")
     schedule_tab = MEN_SHEET_KEY if division_sched == "Men's" else WOMEN_SHEET_KEY
     schedule_df = load_sheet(SCHEDULE_SHEET_ID, schedule_tab)
