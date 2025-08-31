@@ -508,9 +508,6 @@ with tabs[3]:
 
 # --- PLAYOFFS TAB ---
 with tabs[4]:
-    st.header("Playoff Brackets")
-
-    col1, col2 = st.columns(2)
 
     st.header("Playoff Brackets")
 
