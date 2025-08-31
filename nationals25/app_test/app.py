@@ -347,6 +347,8 @@ def compute_overall_rankings(results_df):
 # ---- MAIN APP ----
 st.title("[Test App] 🏐 The 80th NACIVT in NYC")  # fixed title
 
+st.info("After Round 2 Pool Play is finished for your court, work teams please return work baskets to command center. Teams involved in challenge matches must check in tomorrow at 7AM and challenge matches will start Monday 9/1/2025 7:30 AM sharp.")
+
 tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings", "Playoffs"])
 
 # --- SCHEDULE TAB ---
@@ -406,6 +408,9 @@ with tabs[1]:
     sheet_key_res = MEN_RESULTS_KEY if division_res == "Men's" else WOMEN_RESULTS_KEY
     
     df_results = load_results_sheet(RESULTS_SHEET_ID, sheet_key_res)
+
+    if sheet_key_res == "Womens":
+        
 
     if df_results.empty:
         st.info("No results available yet for this division.")
