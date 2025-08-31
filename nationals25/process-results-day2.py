@@ -68,6 +68,22 @@ def calculate_team_stats(df):
 
     return list(teams.values()), matches
 
+def add_opponent_sets_won(teams, matches):
+    """Add total opponent sets won as a strength-of-schedule tiebreaker."""
+    team_lookup = {t["team"]: t for t in teams}
+
+    for team in teams:
+        opponents = set()
+        for match in matches:
+            if match["t1"] == team["team"]:
+                opponents.add(match["t2"])
+            elif match["t2"] == team["team"]:
+                opponents.add(match["t1"])
+
+        # sum all sets_won by this team's opponents
+        opp_sets_won = sum(team_lookup[opp]["sets_won"] for opp in opponents if opp in team_lookup)
+        team["opponent_sets_won"] = opp_sets_won
+
 
 def build_sort_key(team, matches, all_teams):
     """Build tuple sort key for ranking with head-to-head sets first, then points."""
@@ -199,7 +215,8 @@ def write_results(ws_name, teams):
             "Head to Head Result": team["head_to_head_result"],
             "Point Ratio": round(team["point_ratio"], 3),
             "Tied With": tied_str,
-            "Tie Reason": reason_str
+            "Tie Reason": reason_str,
+            "Opponent Sets Won": team["opponent_sets_won"]
         })
 
     df = pd.DataFrame(output)
@@ -218,6 +235,7 @@ def main():
     for division, ws_name, out_ws in [("Mens", "Mens", "Mens_Day2"), ("Womens", "Womens", "Womens_Day2")]:
         df = get_scores(ws_name)
         teams, matches = calculate_team_stats(df)
+        add_opponent_sets_won(teams, matches)
         ranked = rank_teams(teams, matches)
         write_results(out_ws, ranked)
 
