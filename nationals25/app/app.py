@@ -85,6 +85,7 @@ def highlight_status(row):
         colors = {"Playing": "#90EE90", "Working": "#FFD700", "Off": "#D3D3D3"}
     return [f'background-color: {colors.get(row["Team Status"], "")}']*len(row)
 
+@st.cache_data(ttl=15*60)  # 15 minutes
 def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"):
     team_df = df[(df.get(team1_col) == team) | (df.get(team2_col) == team)]
     if team_df.empty:
@@ -111,6 +112,7 @@ def load_team_results(df, team, team1_col="Team 1 Name", team2_col="Team 2 Name"
     return pd.DataFrame(results)
 
 # ---- HELPER: COURT STANDINGS ----
+@st.cache_data(ttl=15*60)  # 15 minutes
 def compute_court_standings(results_df, court_num):
     """Compute standings for all teams on a given court (wins/losses per set)."""
     court_df = results_df[results_df["Court #"] == court_num]
@@ -188,6 +190,7 @@ def compute_court_standings(results_df, court_num):
     )
     return standings_df.reset_index(drop=True)
 
+@st.cache_data(ttl=15*60)  # 15 minutes
 def compute_overall_rankings(results_df):
     """Compute overall standings across all courts with tie-breaking rules."""
     teams = pd.unique(results_df[["Team 1 Name", "Team 2 Name"]].values.ravel())
