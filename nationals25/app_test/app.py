@@ -482,5 +482,8 @@ with tabs[3]:
     if df_rankings.empty:
         st.info("No results available yet for this division.")
     else:
+        st.header("Overall Rankings (Round 1 + Round 2)")
         overall_df = compute_overall_rankings(df_rankings)
         st.dataframe(overall_df)
+
+        st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
