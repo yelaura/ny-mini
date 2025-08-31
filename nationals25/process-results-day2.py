@@ -3,8 +3,8 @@ import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 
 # --- CONFIG ---
-# INPUT_SHEET_KEY = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
-INPUT_SHEET_KEY = "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc" # test input
+# INPUT_SHEET_KEY = "1ljlOAzr8o-3T5L97vjl6pdI7m_qvfa2-Oo_xaTXGEfc" # test input
+INPUT_SHEET_KEY = "1SnbMJVwzD9JHvhzHfjuTHEzIMpSLLalVhyNh7216nXg"
 OUTPUT_SHEET_KEY = "1vxYF86Jh8VL6U96jHarDUqsACYr51aFzuf8fUI65AiU"
 
 # --- AUTH ---
@@ -70,7 +70,7 @@ def calculate_team_stats(df):
 
 
 def build_sort_key(team, matches, all_teams):
-    """Build tuple sort key for ranking with aggregated head-to-head results."""
+    """Build tuple sort key for ranking with head-to-head sets first, then points."""
     sets_won = team["sets_won"]
     point_diff = team["point_diff"]
     point_ratio = team["point_ratio"]
@@ -81,30 +81,66 @@ def build_sort_key(team, matches, all_teams):
     for opponent in all_teams:
         if opponent["team"] == team["team"]:
             continue
+
+        # Only check head-to-head if global sets_won and point_diff tied
         if team["sets_won"] == opponent["sets_won"] and team["point_diff"] == opponent["point_diff"]:
-            wins, losses, ties = 0, 0, 0
+            t_sets, o_sets = 0, 0
+            t_points, o_points = 0, 0
+
             for match in matches:
                 if {match["t1"], match["t2"]} == {team["team"], opponent["team"]}:
                     if match["t1"] == team["team"]:
-                        t_points = match["t1s"] + match["t1s2"]
-                        o_points = match["t2s"] + match["t2s2"]
-                    else:
-                        t_points = match["t2s"] + match["t2s2"]
-                        o_points = match["t1s"] + match["t1s2"]
+                        # Set 1
+                        if match["t1s"] > match["t2s"]:
+                            t_sets += 1
+                        elif match["t1s"] < match["t2s"]:
+                            o_sets += 1
+                        t_points += match["t1s"]
+                        o_points += match["t2s"]
 
-                    if t_points > o_points:
-                        wins += 1
-                    elif t_points < o_points:
-                        losses += 1
-                    else:
-                        ties += 1
+                        # Set 2
+                        if match["t1s2"] > match["t2s2"]:
+                            t_sets += 1
+                        elif match["t1s2"] < match["t2s2"]:
+                            o_sets += 1
+                        t_points += match["t1s2"]
+                        o_points += match["t2s2"]
 
-            if wins or losses or ties:
-                h2h_results.append(f"vs {opponent['team']} ({wins}-{losses})")
-                if wins > losses:
-                    head_to_head = max(head_to_head, 1)
-                elif wins < losses:
-                    head_to_head = min(head_to_head, -1)
+                    else:  # team was Team 2
+                        # Set 1
+                        if match["t2s"] > match["t1s"]:
+                            t_sets += 1
+                        elif match["t2s"] < match["t1s"]:
+                            o_sets += 1
+                        t_points += match["t2s"]
+                        o_points += match["t1s"]
+
+                        # Set 2
+                        if match["t2s2"] > match["t1s2"]:
+                            t_sets += 1
+                        elif match["t2s2"] < match["t1s2"]:
+                            o_sets += 1
+                        t_points += match["t2s2"]
+                        o_points += match["t1s2"]
+
+            # Decide head-to-head outcome
+            if t_sets > o_sets:
+                head_to_head = 1
+            elif o_sets > t_sets:
+                head_to_head = -1
+            else:
+                # same number of sets → use head-to-head point differential
+                if t_points > o_points:
+                    head_to_head = 1
+                elif o_points > t_points:
+                    head_to_head = -1
+                else:
+                    head_to_head = 0
+
+            if t_sets or o_sets:
+                h2h_results.append(
+                    f"vs {opponent['team']} (sets {t_sets}-{o_sets}, pts {t_points}-{o_points})"
+                )
 
     if not h2h_results:
         h2h_results = ["None"]
@@ -126,20 +162,34 @@ def rank_teams(teams, matches):
 
 
 def write_results(ws_name, teams):
-    """Write ranked results to output sheet with Tied Teams column."""
+    """Write ranked results to output sheet with Tied With and Tie Reason columns."""
     output = []
 
-    # Compare each team to all others to find ties
-    n = len(teams)
     for i, team in enumerate(teams):
         tied_with = []
+        tie_reasons = []
+
         for j, other in enumerate(teams):
             if i == j:
                 continue
-            # Teams are tied if all metrics are equal
+
+            # Check if fully tied (same sort key)
             if team["sort_key"] == other["sort_key"]:
                 tied_with.append(other["team"])
+
+                (s1, pd1, h2h1, pr1) = team["sort_key"]
+                (s2, pd2, h2h2, pr2) = other["sort_key"]
+
+                if s1 == s2 and pd1 == pd2:
+                    if h2h1 == h2h2 == 0:
+                        tie_reasons.append("equal sets & point diff, equal H2H sets & points")
+                    elif h2h1 == h2h2:
+                        tie_reasons.append("equal sets & point diff, equal H2H sets, fallback to point ratio")
+                if pr1 == pr2:
+                    tie_reasons.append("identical point ratio")
+
         tied_str = ", ".join(tied_with) if tied_with else "None"
+        reason_str = "; ".join(set(tie_reasons)) if tie_reasons else "None"
 
         output.append({
             "Overall Ranking": i + 1,
@@ -148,12 +198,12 @@ def write_results(ws_name, teams):
             "Point Differential": team["point_diff"],
             "Head to Head Result": team["head_to_head_result"],
             "Point Ratio": round(team["point_ratio"], 3),
-            "Tied With": tied_str
+            "Tied With": tied_str,
+            "Tie Reason": reason_str
         })
 
     df = pd.DataFrame(output)
 
-    # Write to Google Sheet
     try:
         ws = output_sh.worksheet(ws_name)
         ws.clear()

@@ -188,10 +188,148 @@ def compute_court_standings(results_df, court_num):
     )
     return standings_df.reset_index(drop=True)
 
-# ---- MAIN APP ----
-st.title("🏐 The 80th NACIVT in NYC")  # fixed title
+# ---- HELPER: OVERALL RANKINGS with Head-to-Head ----
+def compute_overall_rankings(results_df):
+    """Compute overall standings across all courts with tie-breaking rules."""
+    teams = pd.unique(results_df[["Team 1 Name", "Team 2 Name"]].values.ravel())
+    standings = []
 
-tabs = st.tabs(["Schedule", "Results", "Roster"])
+    # Aggregate stats for each team
+    for team in teams:
+        if pd.isna(team) or team.strip() == "":
+            continue
+
+        team_games = results_df[
+            (results_df["Team 1 Name"] == team) | (results_df["Team 2 Name"] == team)
+        ]
+        
+        wins, losses, points_for, points_against = 0, 0, 0, 0
+
+        for _, row in team_games.iterrows():
+            if pd.isna(row.get("Team 1 Score")) or pd.isna(row.get("Team 2 Score")):
+                continue  
+
+            t1, t2 = row["Team 1 Name"], row["Team 2 Name"]
+
+            # --- First set ---
+            s1, s2 = row.get("Team 1 Score", 0), row.get("Team 2 Score", 0)
+            if team == t1:
+                points_for += s1; points_against += s2
+                wins += 1 if s1 > s2 else 0
+                losses += 1 if s1 < s2 else 0
+            elif team == t2:
+                points_for += s2; points_against += s1
+                wins += 1 if s2 > s1 else 0
+                losses += 1 if s2 < s1 else 0
+
+            # --- Second set ---
+            s1b, s2b = row.get("Team 1 Score 2", 0), row.get("Team 2 Score 2", 0)
+            if team == t1:
+                points_for += s1b; points_against += s2b
+                wins += 1 if s1b > s2b else 0
+                losses += 1 if s1b < s2b else 0
+            elif team == t2:
+                points_for += s2b; points_against += s1b
+                wins += 1 if s2b > s1b else 0
+                losses += 1 if s2b < s1b else 0
+
+        point_diff = points_for - points_against
+        point_ratio = round(points_for / points_against, 3) if points_against > 0 else float("inf")
+
+        standings.append({
+            "Team": team,
+            "Sets Won": wins,
+            "Losses": losses,
+            "Point Differential": point_diff,
+            "Point Ratio": point_ratio
+        })
+
+    standings_df = pd.DataFrame(standings)
+
+    # ---- Sort Step 1: by sets won, point diff, point ratio ----
+    standings_df.sort_values(
+        by=["Sets Won", "Point Differential", "Point Ratio"],
+        ascending=[False, False, False],
+        inplace=True
+    )
+    standings_df.reset_index(drop=True, inplace=True)
+
+    # ---- Step 2: Apply head-to-head tiebreakers ----
+    def resolve_ties(df, results_df):
+        ranked = []
+        i = 0
+        while i < len(df):
+            # find group with same Sets Won + Point Differential
+            group = df[
+                (df["Sets Won"] == df.iloc[i]["Sets Won"]) &
+                (df["Point Differential"] == df.iloc[i]["Point Differential"])
+            ]
+            if len(group) == 1:
+                ranked.append(group)
+                i += 1
+            else:
+                # compute head-to-head within group
+                teams_in_group = group["Team"].tolist()
+                h2h_stats = []
+                for team in teams_in_group:
+                    h2h_wins, h2h_points_for, h2h_points_against = 0, 0, 0
+                    # filter only matches among tied teams
+                    h2h_games = results_df[
+                        (results_df["Team 1 Name"].isin(teams_in_group)) &
+                        (results_df["Team 2 Name"].isin(teams_in_group)) &
+                        ((results_df["Team 1 Name"] == team) | (results_df["Team 2 Name"] == team))
+                    ]
+                    for _, row in h2h_games.iterrows():
+                        t1, t2 = row["Team 1 Name"], row["Team 2 Name"]
+                        s1, s2 = row.get("Team 1 Score", 0), row.get("Team 2 Score", 0)
+                        s1b, s2b = row.get("Team 1 Score 2", 0), row.get("Team 2 Score 2", 0)
+
+                        if team == t1:
+                            # set 1
+                            h2h_points_for += s1; h2h_points_against += s2
+                            h2h_wins += 1 if s1 > s2 else 0
+                            # set 2
+                            h2h_points_for += s1b; h2h_points_against += s2b
+                            h2h_wins += 1 if s1b > s2b else 0
+                        elif team == t2:
+                            # set 1
+                            h2h_points_for += s2; h2h_points_against += s1
+                            h2h_wins += 1 if s2 > s1 else 0
+                            # set 2
+                            h2h_points_for += s2b; h2h_points_against += s1b
+                            h2h_wins += 1 if s2b > s1b else 0
+
+                    h2h_point_diff = h2h_points_for - h2h_points_against
+                    h2h_stats.append({
+                        "Team": team,
+                        "h2h Sets Won": h2h_wins,
+                        "h2h Point Diff": h2h_point_diff,
+                        "h2h Point Ratio": round(h2h_points_for / h2h_points_against, 3) if h2h_points_against > 0 else float("inf")
+                    })
+
+                h2h_df = pd.DataFrame(h2h_stats)
+                # sort by head-to-head criteria
+                h2h_df.sort_values(
+                    by=["h2h Sets Won", "h2h Point Diff", "h2h Point Ratio"],
+                    ascending=[False, False, False],
+                    inplace=True
+                )
+                # merge back with original group’s global stats
+                merged = group.set_index("Team").loc[h2h_df["Team"]].reset_index()
+                ranked.append(merged)
+                i += len(group)
+        return pd.concat(ranked, ignore_index=True)
+
+    standings_df = resolve_ties(standings_df, results_df)
+    standings_df.index = standings_df.index + 1
+    standings_df.index.name = "Rank"
+
+    return standings_df[["Team", "Sets Won", "Point Differential", "Point Ratio"]]
+
+# ---- MAIN APP ----
+st.title("[Test App] 🏐 The 80th NACIVT in NYC")  # fixed title
+
+tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings"])
 
 # --- SCHEDULE TAB ---
 with tabs[0]:
@@ -332,3 +470,17 @@ with tabs[2]:
         ["Player Name", "Jersey #", "Wristband Color"]
     ].reset_index(drop=True)
     st.dataframe(team_roster_df)
+
+# --- OVERALL RANKINGS TAB ---
+with tabs[3]:
+    st.header("Overall Rankings")
+    division_rank = st.selectbox("Select Division (Rankings)", ["Men's", "Women's"], key="rank_div")
+    sheet_key_rank = MEN_RESULTS_KEY if division_rank == "Men's" else WOMEN_RESULTS_KEY
+
+    df_rankings = load_results_sheet(RESULTS_SHEET_ID, sheet_key_rank)
+
+    if df_rankings.empty:
+        st.info("No results available yet for this division.")
+    else:
+        overall_df = compute_overall_rankings(df_rankings)
+        st.dataframe(overall_df)
