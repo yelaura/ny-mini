@@ -325,9 +325,9 @@ def compute_overall_rankings(results_df):
 # ---- MAIN APP ----
 st.title("🏐 The 80th NACIVT in NYC")  # fixed title
 
-st.info("After Round 2 Pool Play is finished for your court, work teams please return work baskets to command center. Teams involved in challenge matches (working and playing) must check in tomorrow at 7AM and challenge matches will start Monday 9/1/2025 7:30 AM sharp. Men’s teams with overall rankings 9-32, 41-52, 65-76, 89-100 and Women’s teams with overall rankings 9-32, 41-52, 65-76 - please expect to arrive on Monday at 7:00AM for working or playing challenge matches.")
+st.info("Teams involved in challenge matches (working and playing) must check in Monday 9/1 at 7AM and challenge matches will start at 7:30 AM sharp.")
 
-st.info("[Click here](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=962079446&single=true) to see expected challenge match pairings (by overall ranking), work teams (by overall ranking), and court assignments.")
+st.info("CHALLENGE MATCHES RELEASED\n\n[Mens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1146413061&single=true)\n\n[Womens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1816112304&single=true)")
 
 tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings"])
 
