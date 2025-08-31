@@ -343,6 +343,9 @@ st.title("[Test App] 🏐 The 80th NACIVT in NYC")  # fixed title
 
 st.info("After Round 2 Pool Play is finished for your court, work teams please return work baskets to command center. Teams involved in challenge matches must check in tomorrow at 7AM and challenge matches will start Monday 9/1/2025 7:30 AM sharp.")
 
+st.info("Challenge Matches\n\n" \
+"Gold Matches (Men's and Women's)n")
+
 tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings", "Playoffs"])
 
 # --- SCHEDULE TAB ---
