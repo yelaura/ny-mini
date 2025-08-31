@@ -409,9 +409,6 @@ with tabs[1]:
     
     df_results = load_results_sheet(RESULTS_SHEET_ID, sheet_key_res)
 
-    if sheet_key_res == "Womens":
-        st.dataframe(df_results)
-
     if df_results.empty:
         st.info("No results available yet for this division.")
     else:
