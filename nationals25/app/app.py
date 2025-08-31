@@ -236,7 +236,7 @@ def compute_overall_rankings(results_df):
                 losses += 1 if s2b < s1b else 0
 
         point_diff = points_for - points_against
-        point_ratio = round(points_for / points_against, 3) if points_against > 0 else float("inf")
+        point_ratio = round(points_for / points_against, 5) if points_against > 0 else float("inf")
 
         standings.append({
             "Team": team,
