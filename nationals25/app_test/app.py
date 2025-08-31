@@ -515,7 +515,7 @@ with tabs[4]:
     with col2:
         st.subheader("Womens Brackets")
         for name, url in zip(WOMENS_BRACKETS, WOMENS_PLAYOFFS):
-            if st.button(f"{name} Bracket", key=f"women_{name}"):
+            if st.button(f"{name}", key=f"women_{name}"):
                 st.write(f"Opening {name} Bracket...")
                 st.markdown(f'<a href="{url}" target="_blank">Click here to open</a>', unsafe_allow_html=True)
 
@@ -523,4 +523,6 @@ with tabs[4]:
     with col1:
         st.subheader("Mens Brackets")
         for name, url in zip(MENS_BRACKETS, MENS_PLAYOFFS):
-            st.markdown(f"[{name} Bracket]({url})", unsafe_allow_html=True)
+            if st.button(f"{name}", key=f"women_{name}"):
+                st.write(f"Opening {name} Bracket...")
+                st.markdown(f'<a href="{url}" target="_blank">Click here to open</a>', unsafe_allow_html=True)
