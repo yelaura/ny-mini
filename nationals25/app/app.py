@@ -241,7 +241,7 @@ def compute_overall_rankings(results_df):
         standings.append({
             "Team": team,
             "Sets Won": wins,
-            "Losses": losses,
+            "Sets Lost": losses,   # 👈 renamed here
             "Point Differential": point_diff,
             "Point Ratio": point_ratio
         })
@@ -275,7 +275,6 @@ def compute_overall_rankings(results_df):
                 h2h_stats = []
                 for team in teams_in_group:
                     h2h_wins, h2h_points_for, h2h_points_against = 0, 0, 0
-                    # filter only matches among tied teams
                     h2h_games = results_df[
                         (results_df["Team 1 Name"].isin(teams_in_group)) &
                         (results_df["Team 2 Name"].isin(teams_in_group)) &
@@ -287,17 +286,13 @@ def compute_overall_rankings(results_df):
                         s1b, s2b = row.get("Team 1 Score 2", 0), row.get("Team 2 Score 2", 0)
 
                         if team == t1:
-                            # set 1
                             h2h_points_for += s1; h2h_points_against += s2
                             h2h_wins += 1 if s1 > s2 else 0
-                            # set 2
                             h2h_points_for += s1b; h2h_points_against += s2b
                             h2h_wins += 1 if s1b > s2b else 0
                         elif team == t2:
-                            # set 1
                             h2h_points_for += s2; h2h_points_against += s1
                             h2h_wins += 1 if s2 > s1 else 0
-                            # set 2
                             h2h_points_for += s2b; h2h_points_against += s1b
                             h2h_wins += 1 if s2b > s1b else 0
 
@@ -310,13 +305,11 @@ def compute_overall_rankings(results_df):
                     })
 
                 h2h_df = pd.DataFrame(h2h_stats)
-                # sort by head-to-head criteria
                 h2h_df.sort_values(
                     by=["h2h Sets Won", "h2h Point Diff", "h2h Point Ratio"],
                     ascending=[False, False, False],
                     inplace=True
                 )
-                # merge back with original group’s global stats
                 merged = group.set_index("Team").loc[h2h_df["Team"]].reset_index()
                 ranked.append(merged)
                 i += len(group)
@@ -326,7 +319,8 @@ def compute_overall_rankings(results_df):
     standings_df.index = standings_df.index + 1
     standings_df.index.name = "Rank"
 
-    return standings_df[["Team", "Sets Won", "Point Differential", "Point Ratio"]]
+    # Return with new column order
+    return standings_df[["Team", "Sets Won", "Sets Lost", "Point Differential", "Point Ratio"]]
 
 # ---- MAIN APP ----
 st.title("🏐 The 80th NACIVT in NYC")  # fixed title
