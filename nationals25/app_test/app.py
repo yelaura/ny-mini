@@ -512,17 +512,30 @@ with tabs[4]:
 
     col1, col2 = st.columns(2)
 
+    st.header("Playoff Brackets")
+
+    col1, col2 = st.columns(2)
+
+    # Womens side
     with col2:
         st.subheader("Womens Brackets")
         for name, url in zip(WOMENS_BRACKETS, WOMENS_PLAYOFFS):
-            if st.button(f"{name}", key=f"women_{name}"):
-                st.write(f"Opening {name} Bracket...")
-                st.markdown(f'<a href="{url}" target="_blank">Click here to open</a>', unsafe_allow_html=True)
+            st.markdown(
+                f'<a href="{url}" target="_blank">'
+                f'<button style="margin:5px;padding:10px 20px;border-radius:8px;'
+                f'background-color:#FF69B4;color:white;border:none;cursor:pointer;">'
+                f'{name} Bracket</button></a>',
+                unsafe_allow_html=True
+            )
 
-
+    # Mens side
     with col1:
         st.subheader("Mens Brackets")
         for name, url in zip(MENS_BRACKETS, MENS_PLAYOFFS):
-            if st.button(f"{name}", key=f"women_{name}"):
-                st.write(f"Opening {name} Bracket...")
-                st.markdown(f'<a href="{url}" target="_blank">Click here to open</a>', unsafe_allow_html=True)
+            st.markdown(
+                f'<a href="{url}" target="_blank">'
+                f'<button style="margin:5px;padding:10px 20px;border-radius:8px;'
+                f'background-color:#1E90FF;color:white;border:none;cursor:pointer;">'
+                f'{name} Bracket</button></a>',
+                unsafe_allow_html=True
+            )
