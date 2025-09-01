@@ -350,7 +350,7 @@ st.info("CHALLENGE MATCHES RELEASED\n\n[Mens Challenge Matches](https://docs.goo
 
 st.info("Playoff Start Times\n\n7:30AM FIRST Whistle for Men's & Women's Challenge Matches\n\n8:30AM All Mens Playoff Brackets & Women's Gold and Copper Playoffs Bracket\n\n10:00AM Women's Silver and Bronze Bracket")
 
-tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings", "Playoffs"])
+tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings", "Playoffs", "Challenge Matches"])
 
 # --- SCHEDULE TAB ---
 with tabs[0]:
@@ -539,3 +539,9 @@ with tabs[4]:
                 f'{name} Bracket</button></a>',
                 unsafe_allow_html=True
             )
+
+with tabs[5]:
+    st.header("CHALLENGE MATCH RESULTS")
+    
+    st.text("[Mens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1146413061&single=true)")
+    st.text("[Womens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1816112304&single=true)")
