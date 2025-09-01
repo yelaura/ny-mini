@@ -331,7 +331,7 @@ st.info("CHALLENGE MATCHES RELEASED\n\n[Mens Challenge Matches](https://docs.goo
 
 st.info("Playoff Start Times\n\n7:30AM FIRST Whistle for Men's & Women's Challenge Matches\n\n8:30AM All Mens Playoff Brackets & Women's Gold and Copper Playoffs Bracket\n\n10:00AM Women's Silver and Bronze Bracket")
 
-tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings"])
+tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings", "Playoff Brackets"])
 
 # --- SCHEDULE TAB ---
 with tabs[0]:
@@ -535,3 +535,53 @@ with tabs[3]:
         st.dataframe(overall_df)
 
         st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
+
+# --- OVERALL RANKINGS TAB ---
+with tabs[3]:
+    st.header("Overall Rankings")
+    division_rank = st.selectbox("Select Division (Rankings)", ["Men's", "Women's"], key="rank_div")
+    sheet_key_rank = MEN_RESULTS_KEY if division_rank == "Men's" else WOMEN_RESULTS_KEY
+
+    df_rankings = load_results_sheet(RESULTS_SHEET_ID, sheet_key_rank)
+
+    if df_rankings.empty:
+        st.info("No results available yet for this division.")
+    else:
+        st.header("Overall Rankings (Round 1 + Round 2)")
+        overall_df = compute_overall_rankings(df_rankings)
+        st.dataframe(overall_df)
+
+        st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
+
+# --- PLAYOFFS TAB ---
+with tabs[4]:
+
+    st.header("Playoff Brackets")
+
+    st.text("Bookmark your Playoff Bracket for future reference!")
+
+    col1, col2 = st.columns(2)
+
+    # Womens side
+    with col2:
+        st.subheader("Womens Brackets")
+        for name, url in zip(WOMENS_BRACKETS, WOMENS_PLAYOFFS):
+            st.markdown(
+                f'<a href="{url}" target="_blank">'
+                f'<button style="margin:5px;padding:10px 20px;border-radius:8px;'
+                f'background-color:#FF69B4;color:white;border:none;cursor:pointer;">'
+                f'{name} Bracket</button></a>',
+                unsafe_allow_html=True
+            )
+
+    # Mens side
+    with col1:
+        st.subheader("Mens Brackets")
+        for name, url in zip(MENS_BRACKETS, MENS_PLAYOFFS):
+            st.markdown(
+                f'<a href="{url}" target="_blank">'
+                f'<button style="margin:5px;padding:10px 20px;border-radius:8px;'
+                f'background-color:#1E90FF;color:white;border:none;cursor:pointer;">'
+                f'{name} Bracket</button></a>',
+                unsafe_allow_html=True
+            )
