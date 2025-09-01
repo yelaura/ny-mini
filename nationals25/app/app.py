@@ -559,7 +559,7 @@ with tabs[4]:
 
     st.header("Playoff Brackets")
 
-    st.text("Bookmark your Playoff Bracket for future reference!")
+    st.text("Bookmark your Playoff Bracket for future reference! Scores and winners of each match will be updated throughout the day.")
 
     col1, col2 = st.columns(2)
 
