@@ -539,7 +539,7 @@ with tabs[2]:
 
 # --- OVERALL RANKINGS TAB ---
 with tabs[3]:
-    st.header("Overall Rankings")
+    st.header("Overall Rankings (Round 1 + Round 2)")
     division_rank = st.selectbox("Select Division (Rankings)", ["Men's", "Women's"], key="rank_div")
     sheet_key_rank = MEN_RESULTS_KEY if division_rank == "Men's" else WOMEN_RESULTS_KEY
 
@@ -548,7 +548,6 @@ with tabs[3]:
     if df_rankings.empty:
         st.info("No results available yet for this division.")
     else:
-        st.header("Overall Rankings (Round 1 + Round 2)")
         overall_df = compute_overall_rankings(df_rankings)
         st.dataframe(overall_df)
 
