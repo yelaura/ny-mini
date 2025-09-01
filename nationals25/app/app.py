@@ -329,6 +329,8 @@ st.info("Teams involved in challenge matches (working and playing) must check in
 
 st.info("CHALLENGE MATCHES RELEASED\n\n[Mens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1146413061&single=true)\n\n[Womens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1816112304&single=true)")
 
+st.info("Playoff Start Times\n\n7:30AM FIRST Whistle for Men's & Women's Challenge Matches\n\n8:30AM All Mens Playoff Brackets & Women's Gold and Copper Playoffs Bracket\n\n10:00AM Women's Silver and Bronze Bracket")
+
 tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings"])
 
 # --- SCHEDULE TAB ---
