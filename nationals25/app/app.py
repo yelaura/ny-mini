@@ -17,6 +17,24 @@ WOMEN_RESULTS_KEY = "Womens"
 
 ROSTER_WORKSHEET_NAME = "NYC"
 
+WOMENS_PLAYOFFS = [
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1969705780&single=true",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=294712363&single=true",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1289632369&single=true",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=408416220&single=true"
+]
+
+MENS_PLAYOFFS = [
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1353991113&single=true",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=992689214&single=true",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1459094529&single=true",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=902053005&single=true",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=280122778&single=true"
+]
+
+WOMENS_BRACKETS = ["Gold", "Silver", "Bronze", "Copper"]
+MENS_BRACKETS = ["Gold", "Silver", "Bronze", "Copper", "Contention"]
+
 # ---- STREAMLIT CACHING FUNCTIONS ----
 @st.cache_data(ttl=6*60*60)  # 6 hours
 def load_sheet(sheet_id, worksheet_name):
