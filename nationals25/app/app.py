@@ -536,23 +536,6 @@ with tabs[3]:
 
         st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
 
-# --- OVERALL RANKINGS TAB ---
-with tabs[3]:
-    st.header("Overall Rankings")
-    division_rank = st.selectbox("Select Division (Rankings)", ["Men's", "Women's"], key="rank_div")
-    sheet_key_rank = MEN_RESULTS_KEY if division_rank == "Men's" else WOMEN_RESULTS_KEY
-
-    df_rankings = load_results_sheet(RESULTS_SHEET_ID, sheet_key_rank)
-
-    if df_rankings.empty:
-        st.info("No results available yet for this division.")
-    else:
-        st.header("Overall Rankings (Round 1 + Round 2)")
-        overall_df = compute_overall_rankings(df_rankings)
-        st.dataframe(overall_df)
-
-        st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
-
 # --- PLAYOFFS TAB ---
 with tabs[4]:
 
