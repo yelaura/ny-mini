@@ -343,13 +343,7 @@ def compute_overall_rankings(results_df):
 # ---- MAIN APP ----
 st.title("🏐 The 80th NACIVT in NYC")  # fixed title
 
-st.info("Teams involved in challenge matches (working and playing) must check in Monday 9/1 at 7AM and challenge matches will start at 7:30 AM sharp.")
-
-st.info("CHALLENGE MATCHES RELEASED\n\n[Mens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1146413061&single=true)\n\n[Womens Challenge Matches](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1816112304&single=true)")
-
-st.info("Playoff Start Times\n\n7:30AM FIRST Whistle for Men's & Women's Challenge Matches\n\n8:30AM All Mens Playoff Brackets & Women's Gold and Copper Playoffs Bracket\n\n10:00AM Women's Silver and Bronze Bracket")
-
-tabs = st.tabs(["Playoff Brackets", "Results", "Roster", "Overall Rankings"])
+tabs = st.tabs(["Playoff Brackets", "Results", "Roster", "Overall Rankings", "Challenge Matches"])
 
 # --- SCHEDULE TAB ---
 # with tabs[0]:
@@ -585,3 +579,9 @@ with tabs[0]:
                 f'{name} Bracket</button></a>',
                 unsafe_allow_html=True
             )
+
+with tabs[4]:
+    st.header("Challenge Matches")
+    
+    st.markdown("[Mens Challenge Match Results](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1146413061&single=true)")
+    st.markdown("[Womens Challenge Match Results](https://docs.google.com/spreadsheets/d/e/2PACX-1vRPTmXZ_OJJBbRUdtbiU3qamF0-r9dA9eJnznhuRyNq7Cgwk3uk878Ss2UXd7nnw433sRIYf-3hkOPP/pubhtml?gid=1816112304&single=true)")
