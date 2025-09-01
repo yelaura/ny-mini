@@ -349,10 +349,10 @@ st.info("CHALLENGE MATCHES RELEASED\n\n[Mens Challenge Matches](https://docs.goo
 
 st.info("Playoff Start Times\n\n7:30AM FIRST Whistle for Men's & Women's Challenge Matches\n\n8:30AM All Mens Playoff Brackets & Women's Gold and Copper Playoffs Bracket\n\n10:00AM Women's Silver and Bronze Bracket")
 
-tabs = st.tabs(["Schedule", "Results", "Roster", "Overall Rankings", "Playoff Brackets"])
+tabs = st.tabs(["Playoff Brackets", "Results", "Roster", "Overall Rankings"])
 
 # --- SCHEDULE TAB ---
-with tabs[0]:
+# with tabs[0]:
     st.header("Schedule (Round 2)")
     division_sched = st.selectbox("Select Division (Schedule)", ["Men's", "Women's"], key="sched_div")
     schedule_tab = MEN_SHEET_KEY if division_sched == "Men's" else WOMEN_SHEET_KEY
@@ -555,7 +555,7 @@ with tabs[3]:
         st.warning("Results may take up to 20 minutes to update. For corrections, please contact lye@nystrangers.org")
 
 # --- PLAYOFFS TAB ---
-with tabs[4]:
+with tabs[0]:
 
     st.header("Playoff Brackets")
 
